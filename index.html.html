@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Valentine ✨ | 3 x 1000</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ffb3c1;
+            --accent: #ff758f;
+            --dark: #1a0a0f;
+            --text: #590d22;
+            --white: #ffffff;
+            --gold: #ffd700;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, var(--dark) 0%, #2d1319 100%);
+            color: var(--white);
+        }
+
+        /* --- Loader --- */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loader-heart {
+            font-size: 80px;
+            animation: pulse 1.5s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--secondary);
+            opacity: 0.8;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* --- Cœurs flottants --- */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: floatHearts linear infinite;
+        }
+
+        @keyframes floatHearts {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- Container principal --- */
+        .main-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- Carte du questionnaire --- */
+        .question-card {
+            background: linear-gradient(145deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(30px) saturate(180%);
+            border-radius: 35px;
+            padding: 3.5rem 2.5rem;
+            box-shadow: 
+                0 8px 32px 0 rgba(255, 77, 109, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 0 60px rgba(255, 179, 193, 0.05);
+            border: 2px solid rgba(255, 179, 193, 0.2);
+            position: relative;
+            overflow: hidden;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Effet de brillance animée */
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            animation: rotateBrilliance 20s linear infinite;
+        }
+
+        @keyframes rotateBrilliance {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Bordure animée */
+        .question-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 35px;
+            padding: 2px;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 77, 109, 0.5), 
+                transparent, 
+                rgba(255, 179, 193, 0.5), 
+                transparent);
+            background-size: 300% 300%;
+            animation: gradientBorder 5s ease infinite;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        @keyframes gradientBorder {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* --- Photo profil --- */
+        .profile-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            border: 5px solid rgba(255, 77, 109, 0.6);
+            box-shadow: 
+                0 15px 50px rgba(255, 77, 109, 0.5),
+                0 0 0 10px rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(255, 77, 109, 0.2);
+            object-fit: cover;
+            display: block;
+            position: relative;
+            z-index: 2;
+            animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        @keyframes glow {
+            0% { 
+                box-shadow: 
+                    0 15px 50px rgba(255, 77, 109, 0.5),
+                    0 0 0 10px rgba(255, 255, 255, 0.1),
+                    inset 0 0 20px rgba(255, 77, 109, 0.2);
+            }
+            100% { 
+                box-shadow: 
+                    0 15px 60px rgba(255, 77, 109, 0.8),
+                    0 0 0 10px rgba(255, 255, 255, 0.2),
+                    inset 0 0 30px rgba(255, 77, 109, 0.4),
+                    0 0 40px rgba(255, 77, 109, 0.6);
+            }
+        }
+
+        /* --- Titre questionnaire --- */
+        .question-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            animation: titleShine 3s ease-in-out infinite;
+        }
+
+        @keyframes titleShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .question-subtitle {
+            display: block;
+            font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+            margin-top: 0.8rem;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- Boutons questionnaire --- */
+        .question-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            position: relative;
+            min-height: 200px;
+            z-index: 2;
+            padding: 1.5rem 0;
+        }
+
+        .btn {
+            padding: 18px 60px;
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        #btn-yes {
+            background: linear-gradient(135deg, var(--primary) 0%, #ff0a54 50%, var(--accent) 100%);
+            background-size: 200% 200%;
+            color: white;
+            box-shadow: 
+                0 15px 40px rgba(255, 77, 109, 0.6),
+                0 0 30px rgba(255, 77, 109, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            z-index: 100;
+            transform-origin: center;
+            animation: buttonGradient 3s ease infinite;
+        }
+
+        @keyframes buttonGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        #btn-yes:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 20px 50px rgba(255, 77, 109, 0.8),
+                0 0 40px rgba(255, 77, 109, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        #btn-yes:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        #btn-no {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: 3px solid rgba(255, 77, 109, 0.5);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        #btn-no:hover {
+            background: rgba(255, 77, 109, 0.15);
+            border-color: rgba(255, 77, 109, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Bouton retour --- */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 77, 109, 0.3);
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* --- Carrousel (caché initialement) --- */
+        .carousel-section {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        /* --- Header carrousel --- */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            background: linear-gradient(135deg, var(--white) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 1px;
+        }
+
+        /* --- Container du carrousel --- */
+        .carousel-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        /* --- Carrousel --- */
+        .carousel {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .carousel {
+                height: 450px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel {
+                height: 400px;
+            }
+        }
+
+        /* --- Cartes --- */
+        .card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.8s ease, opacity 0.8s ease;
+            border-radius: 25px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* Overlay sombre pour chaque carte */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg, 
+                rgba(0, 0, 0, 0.7) 0%, 
+                rgba(26, 10, 15, 0.8) 50%,
+                rgba(89, 13, 34, 0.7) 100%
+            );
+            z-index: 2;
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 3;
+        }
+
+        .card.prev {
+            transform: translateX(-100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .card.next {
+            transform: translateX(100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Images de fond pour chaque carte - UTILISATION DES FICHIERS LOCAUX */
+        #card1 {
+            background-image: url('fond1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #card2 {
+            background-image: url('fond2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #card3 {
+            background-image: url('fond3.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #card4 {
+            background-image: url('fond4.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+         #card5 {
+            background-image: url('fond1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+            z-index: 4;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-content {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 30px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .card-text {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+            position: relative;
+            z-index: 3;
+        }
+
+        .special-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--gold);
+            margin: 20px 0;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.9);
+            animation: glow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 3;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.9); }
+            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.9); }
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            color: var(--secondary);
+            margin-top: 30px;
+            text-align: right;
+            width: 100%;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+            position: relative;
+            z-index: 3;
+        }
+
+        /* --- Contrôles du carrousel --- */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .carousel-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255, 77, 109, 0.3);
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .carousel-btn:active {
+            transform: scale(0.95);
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        /* --- Indicateur de progression --- */
+        .progress-container {
+            width: 100%;
+            max-width: 600px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 30px auto 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .heartbeat {
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            color: var(--primary);
+            margin: 0 5px;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10%, 30% { transform: scale(1.15); }
+            20%, 40% { transform: scale(1.05); }
+        }
+
+        /* --- Message d'encouragement --- */
+        .encouragement {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: bold;
+            color: var(--primary);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+            text-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding: 15px;
+            }
+            
+            .question-card {
+                padding: 2.5rem 2rem;
+            }
+            
+            .profile-image {
+                width: 110px;
+                height: 110px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .question-buttons {
+                min-height: 170px;
+                gap: 20px;
+            }
+            
+            .btn {
+                padding: 16px 45px;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .carousel {
+                height: 420px;
+            }
+            
+            .card-content {
+                padding: 30px 20px;
+            }
+            
+            .card-text {
+                font-size: 1.2rem;
+            }
+            
+            .back-button {
+                top: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .question-card {
+                padding: 2rem 1.5rem;
+                border-radius: 25px;
+            }
+            
+            .profile-image {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .btn {
+                padding: 14px 35px;
+                font-size: 1rem;
+            }
+            
+            .carousel {
+                height: 380px;
+                border-radius: 20px;
+            }
+            
+            .card-content {
+                padding: 25px 15px;
+            }
+            
+            .card-text {
+                font-size: 1.1rem;
+                line-height: 1.5;
+            }
+            
+            .special-text {
+                font-size: 1.8rem;
+                margin: 15px 0;
+            }
+            
+            .carousel-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+            
+            .back-button {
+                top: 10px;
+                left: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-height: 700px) and (orientation: landscape) {
+            .main-wrapper {
+                padding: 10px;
+            }
+            
+            .question-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .profile-image {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 1rem;
+            }
+            
+            .question-buttons {
+                min-height: 120px;
+                gap: 12px;
+            }
+            
+            .btn {
+                padding: 12px 30px;
+                font-size: 0.9rem;
+            }
+            
+            .carousel {
+                height: 300px;
+            }
+            
+            .card-content {
+                padding: 20px 15px;
+            }
+            
+            .back-button {
+                top: 10px;
+                left: 10px;
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+
+        /* --- Accessibilité --- */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-heart">❤️</div>
+        <div class="loader-text">Prépare-toi à un voyage du cœur...</div>
+    </div>
+
+    <!-- Cœurs flottants -->
+    <div class="floating-hearts" id="hearts-bg"></div>
+
+    <!-- Message d'encouragement -->
+    <div class="encouragement" id="encouragement"></div>
+
+    <!-- Contenu principal -->
+    <div class="main-wrapper">
+        
+        <!-- Carte du questionnaire (visible au début) -->
+        <div class="question-card" id="question-card">
+            <img src="me.png" alt="Photo" class="profile-image" id="profile-pic">
+            
+            <h1 class="question-title">
+                Joyeuse Saint-Valentin... 
+                <span class="question-subtitle">Veux-tu découvrir mon message ?</span>
+            </h1>
+            
+            <div class="question-buttons">
+                <button class="btn" id="btn-yes">OUI ! ❤️</button>
+                <button class="btn" id="btn-no">Non</button>
+            </div>
+        </div>
+
+        <!-- Section carrousel (cachée au début) -->
+        <div class="carousel-section" id="carousel-section">
+            <!-- Bouton retour -->
+            <button class="back-button" id="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+
+            <!-- Header -->
+            <div class="header">
+                <h1 class="title">Pour toi, mon amour</h1>
+                <div class="subtitle">En ce 14 février 2026</div>
+                <div class="date"></div>
+            </div>
+
+            <!-- Indicateur de progression -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <!-- Container du carrousel -->
+            <div class="carousel-container">
+                <div class="carousel" id="carousel">
+                    
+                    <!-- Carte 1 -->
+                    <div class="card active" id="card1">
+                        <div class="card-number">1</div>
+                        <div class="card-content">
+                            <p class="card-text">
+                                Depuis le 08 Mars 2025 tu partages ma vie et ce temps passé avec toi est l'une des plus belles choses qui me soit arrivée.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte 2 -->
+                    <div class="card" id="card2">
+                        <div class="card-number">2</div>
+                        <div class="card-content">
+                            <p class="card-text">
+                                Tout en souhaitant que ce soit à l'infini,
+                            </p>
+                            <div class="special-text">plus que 3 X 1000</div>
+                            <p class="card-text">
+                                et bien au-delà de l'éternité.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte 3 -->
+                    <div class="card" id="card3">
+                        <div class="card-number">3</div>
+                        <div class="card-content">
+                            <p class="card-text">
+                                Tu es apparue dans un moment où j'avais l'impression de me noyer et tu as été une bouteille d'oxygène qui m'assure de ne pas sombrer.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte 4 -->
+                    <div class="card" id="card4">
+                        <div class="card-number">4</div>
+                        <div class="card-content">
+                            <p class="card-text">
+                                En ce 14 février et après ces presque une année, je suis heureux et fier d'être à tes côtés.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte 5 -->
+                    <div class="card" id="card5">
+                        <div class="card-number">5</div>
+                        <div class="card-content">
+                            <div class="special-text" style="margin-bottom: 40px;">Je t'aime</div>
+                            <p class="card-text">
+                                Plus que les mots ne peuvent le dire, plus que le temps ne peut le mesurer.
+                            </p>
+                            <div class="signature">Pour l'éternité</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Contrôles du carrousel -->
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prev-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="carousel-dots" id="dots-container">
+                    <!-- Les points seront générés par JavaScript -->
+                </div>
+                
+                <button class="carousel-btn" id="next-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>
+                    Créé avec <span class="heartbeat">❤️</span> pour la plus merveilleuse des personnes
+                    <br>
+                    Chaque carte est un morceau de mon cœur
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // =================== INITIALISATION ===================
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Cacher le loader après le chargement
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                
+                // Animation d'entrée de la carte question
+                gsap.from('#question-card', {
+                    opacity: 0,
+                    y: 60,
+                    scale: 0.9,
+                    duration: 1.2,
+                    ease: "back.out(1.4)"
+                });
+                
+                // Démarrer les cœurs flottants
+                createFloatingHearts();
+                
+                // Initialiser le questionnaire
+                initQuestionnaire();
+                
+            }, 1000);
+        });
+
+        // =================== CŒURS FLOTTANTS ===================
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('hearts-bg');
+            const hearts = ['❤️', '💖', '💗', '💓', '💞', '💕', '💝'];
+            
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                
+                // Position aléatoire
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                
+                // Animation aléatoire
+                const duration = Math.random() * 10 + 10;
+                heart.style.animationDuration = duration + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                
+                heartsContainer.appendChild(heart);
+                
+                // Supprimer après l'animation
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, duration * 1000);
+            }
+        }
+
+        // =================== QUESTIONNAIRE ===================
+        let noClickCount = 0;
+        let yesScale = 1;
+        
+        // Phrases amusantes pour le bouton "Non"
+        const phrases = [
+            "Tu es sûre ? 🥺",
+            "Réfléchis bien... 💭",
+            "Mon cœur pleure... 😢",
+            "Vraiment vraiment ? 💔",
+            "Regarde ce ÉNORME OUI ! 👀",
+            "Allez s'il te plaît ! 🙏",
+            "Tu vas craquer ! 😊",
+            "Juste un petit OUI ? 🌹",
+            "Je sais que tu veux dire OUI ! 💖",
+            "Dernier chance ! ✨"
+        ];
+
+        // Messages d'encouragement
+        const encouragements = [
+            "Courage ! 💪",
+            "Presque ! 🎯",
+            "Continue ! 🌟",
+            "Tu y es presque ! ✨",
+            "Encore ! 🔥"
+        ];
+
+        function initQuestionnaire() {
+            const btnYes = document.getElementById('btn-yes');
+            const btnNo = document.getElementById('btn-no');
+            const questionCard = document.getElementById('question-card');
+            const carouselSection = document.getElementById('carousel-section');
+            const questionTitle = document.querySelector('.question-title');
+            const encouragement = document.getElementById('encouragement');
+
+            // --- Logique bouton NON ---
+            btnNo.addEventListener('click', () => {
+                noClickCount++;
+                
+                // Agrandir le bouton OUI
+                yesScale += 0.25;
+                btnYes.style.transform = `scale(${yesScale})`;
+                
+                // Changer le texte de la question
+                const phraseIndex = Math.min(noClickCount - 1, phrases.length - 1);
+                questionTitle.innerHTML = `${phrases[phraseIndex]}<span class="question-subtitle">Veux-tu découvrir mon message ?</span>`;
+
+                // Afficher message d'encouragement
+                if (noClickCount % 2 === 0) {
+                    showEncouragement();
+                }
+
+                // Déplacer le bouton NON
+                const container = document.querySelector('.question-buttons');
+                const rect = container.getBoundingClientRect();
+                const btnRect = btnNo.getBoundingClientRect();
+                
+                const maxX = (rect.width - btnRect.width) / 2 - 30;
+                const maxY = (rect.height - btnRect.height) / 2 - 30;
+                
+                const x = (Math.random() - 0.5) * maxX;
+                const y = (Math.random() - 0.5) * maxY;
+                
+                gsap.to(btnNo, { 
+                    x: x, 
+                    y: y, 
+                    rotation: (Math.random() - 0.5) * 20,
+                    duration: 0.5, 
+                    ease: "back.out(2)" 
+                });
+
+                // Secouer la carte
+                gsap.to(questionCard, {
+                    x: 8,
+                    yoyo: true,
+                    repeat: 7,
+                    duration: 0.05,
+                    onComplete: () => gsap.set(questionCard, { x: 0 })
+                });
+
+                // Effet visuel supplémentaire
+                createBurstHearts(btnNo);
+            });
+
+            // --- Messages d'encouragement ---
+            function showEncouragement() {
+                const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
+                encouragement.textContent = msg;
+                
+                gsap.to(encouragement, {
+                    opacity: 1,
+                    scale: 1.2,
+                    duration: 0.3,
+                    onComplete: () => {
+                        gsap.to(encouragement, {
+                            opacity: 0,
+                            scale: 1,
+                            duration: 0.3,
+                            delay: 0.5
+                        });
+                    }
+                });
+            }
+
+            // --- Explosion de cœurs sur le bouton NON ---
+            function createBurstHearts(element) {
+                const rect = element.getBoundingClientRect();
+                for (let i = 0; i < 5; i++) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '💔';
+                    heart.style.position = 'fixed';
+                    heart.style.left = rect.left + rect.width / 2 + 'px';
+                    heart.style.top = rect.top + rect.height / 2 + 'px';
+                    heart.style.fontSize = '20px';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.zIndex = '1000';
+                    document.body.appendChild(heart);
+
+                    const angle = (Math.PI * 2 * i) / 5;
+                    const distance = 50;
+                    const x = Math.cos(angle) * distance;
+                    const y = Math.sin(angle) * distance;
+
+                    gsap.to(heart, {
+                        x: x,
+                        y: y,
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        onComplete: () => heart.remove()
+                    });
+                }
+            }
+
+            // --- Logique bouton OUI ---
+            btnYes.addEventListener('click', () => {
+                // Animation de sortie spectaculaire de la carte question
+                gsap.to(questionCard, { 
+                    opacity: 0, 
+                    scale: 0.7, 
+                    rotationY: 360,
+                    duration: 1.2, 
+                    ease: "power4.in",
+                    onComplete: () => {
+                        questionCard.style.display = 'none';
+                        carouselSection.style.display = 'block';
+                        showCarousel();
+                    }
+                });
+            });
+
+            // --- Easter egg: clic sur l'image de profil ---
+            document.getElementById('profile-pic').addEventListener('click', () => {
+                gsap.to('#profile-pic', {
+                    rotation: 360,
+                    scale: 1.2,
+                    duration: 0.5,
+                    ease: "back.out(2)",
+                    onComplete: () => {
+                        gsap.to('#profile-pic', {
+                            rotation: 0,
+                            scale: 1,
+                            duration: 0.3
+                        });
+                    }
+                });
+
+                // Mini explosion de cœurs
+                confetti({
+                    particleCount: 20,
+                    spread: 60,
+                    origin: { x: 0.5, y: 0.3 },
+                    colors: ['#ff4d6d', '#ffb3c1'],
+                    shapes: ['heart'],
+                    scalar: 0.8
+                });
+            });
+        }
+
+        // =================== CARROUSEL ===================
+        function showCarousel() {
+            // Animation d'entrée du carrousel
+            gsap.from('#carousel-section', {
+                opacity: 0,
+                y: 60,
+                scale: 0.9,
+                duration: 1.2,
+                ease: "back.out(1.4)",
+                onComplete: () => {
+                    // Initialiser le carrousel
+                    initCarousel();
+                    
+                    // Petits confettis discrets après 5 secondes
+                    setTimeout(() => {
+                        createGentleConfetti();
+                    }, 5000);
+                }
+            });
+            
+            // Initialiser le bouton retour
+            document.getElementById('back-btn').addEventListener('click', goBackToQuestionnaire);
+        }
+        
+        // --- Fonction pour retourner au questionnaire ---
+        function goBackToQuestionnaire() {
+            const questionCard = document.getElementById('question-card');
+            const carouselSection = document.getElementById('carousel-section');
+            
+            // Animation de sortie du carrousel
+            gsap.to(carouselSection, {
+                opacity: 0,
+                scale: 0.7,
+                rotationY: -360,
+                duration: 1.2,
+                ease: "power4.in",
+                onComplete: () => {
+                    carouselSection.style.display = 'none';
+                    questionCard.style.display = 'block';
+                    
+                    // Animation d'entrée de la carte question
+                    gsap.from(questionCard, {
+                        opacity: 0,
+                        scale: 0.7,
+                        rotationY: 360,
+                        duration: 1.2,
+                        ease: "back.out(1.4)"
+                    });
+                }
+            });
+        }
+
+        let currentCardIndex = 0;
+        const totalCards = 5;
+        let autoSlideInterval;
+        
+        function initCarousel() {
+            // Créer les points indicateurs
+            const dotsContainer = document.getElementById('dots-container');
+            dotsContainer.innerHTML = ''; // Nettoyer d'abord
+            
+            for (let i = 0; i < totalCards; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i === 0) dot.classList.add('active');
+                dot.dataset.index = i;
+                dot.addEventListener('click', () => goToCard(i));
+                dotsContainer.appendChild(dot);
+            }
+            
+            // Événements des boutons
+            document.getElementById('prev-btn').addEventListener('click', showPrevCard);
+            document.getElementById('next-btn').addEventListener('click', showNextCard);
+            
+            // Swipe sur mobile
+            let startX = 0;
+            let endX = 0;
+            
+            const carousel = document.getElementById('carousel');
+            
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            carousel.addEventListener('touchmove', (e) => {
+                endX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            carousel.addEventListener('touchend', () => {
+                const diff = startX - endX;
+                const threshold = 50;
+                
+                if (Math.abs(diff) > threshold) {
+                    if (diff > 0) {
+                        showNextCard();
+                    } else {
+                        showPrevCard();
+                    }
+                }
+            });
+            
+            // Démarrer le défilement automatique APRÈS 15 secondes
+            setTimeout(() => {
+                startAutoSlide();
+            }, 15000);
+            
+            // Mettre à jour la barre de progression
+            updateProgressBar();
+        }
+        
+        function showNextCard() {
+            const nextIndex = (currentCardIndex + 1) % totalCards;
+            goToCard(nextIndex);
+        }
+        
+        function showPrevCard() {
+            const prevIndex = (currentCardIndex - 1 + totalCards) % totalCards;
+            goToCard(prevIndex);
+        }
+        
+        function goToCard(index) {
+            // Arrêter le défilement automatique temporairement
+            stopAutoSlide();
+            
+            // Mettre à jour les classes des cartes
+            const cards = document.querySelectorAll('.card');
+            const dots = document.querySelectorAll('.dot');
+            
+            // Retirer toutes les classes de toutes les cartes
+            cards.forEach(card => {
+                card.classList.remove('active', 'prev', 'next');
+            });
+            
+            // Retirer active de tous les dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Ajouter la classe active uniquement à la carte sélectionnée
+            cards[index].classList.add('active');
+            dots[index].classList.add('active');
+            
+            // Mettre à jour l'index courant
+            currentCardIndex = index;
+            
+            // Mettre à jour la barre de progression
+            updateProgressBar();
+            
+            // Redémarrer le défilement automatique après un délai
+            setTimeout(() => {
+                startAutoSlide();
+            }, 5000);
+            
+            // Petit effet de confettis pour certaines cartes
+            if (index === 1 || index === 4) {
+                setTimeout(() => {
+                    createMiniConfetti();
+                }, 300);
+            }
+        }
+        
+        function startAutoSlide() {
+            // Arrêter tout intervalle existant
+            stopAutoSlide();
+            
+            // Démarrer un nouvel intervalle
+            autoSlideInterval = setInterval(() => {
+                showNextCard();
+            }, 10000); // Changement toutes les 10 secondes
+        }
+        
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = null;
+            }
+        }
+        
+        function updateProgressBar() {
+            const progress = ((currentCardIndex + 1) / totalCards) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        // =================== EFFETS SPÉCIAUX ===================
+        function createMiniConfetti() {
+            // Créer une petite explosion de confettis en forme de cœur
+            const colors = ['#ff4d6d', '#ffb3c1', '#ff758f', '#ff0a54'];
+            
+            confetti({
+                particleCount: 10,
+                spread: 50,
+                origin: { y: 0.6 },
+                colors: colors,
+                shapes: ['heart'],
+                scalar: 0.7,
+                gravity: 0.8,
+                ticks: 150
+            });
+        }
+        
+        // --- Confettis doux et discrets ---
+        function createGentleConfetti() {
+            const colors = ['#ff4d6d', '#ffb3c1', '#ff758f'];
+            
+            // Un seul petit jet de confettis
+            confetti({
+                particleCount: 20,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: colors,
+                shapes: ['heart', 'circle'],
+                scalar: 0.8,
+                gravity: 0.8,
+                ticks: 200
+            });
+        }
+
+        // =================== GESTION DU TOUCHER POUR MOBILE ===================
+        let lastTouchEnd = 0;
+        
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // Empêcher le zoom sur iOS
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        // =================== EASTER EGG ===================
+        // Triple clic sur le titre du carrousel affiche un message secret
+        let clickCount = 0;
+        let clickTimer;
+        
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('title')) {
+                clickCount++;
+                
+                if (clickCount === 3) {
+                    // Afficher un message secret
+                    const secretMsg = document.createElement('div');
+                    secretMsg.innerHTML = '✨ 3 X 1000 = l\'infini de mon amour pour toi ✨';
+                    secretMsg.style.position = 'fixed';
+                    secretMsg.style.top = '50%';
+                    secretMsg.style.left = '50%';
+                    secretMsg.style.transform = 'translate(-50%, -50%)';
+                    secretMsg.style.background = 'rgba(255, 77, 109, 0.9)';
+                    secretMsg.style.color = 'white';
+                    secretMsg.style.padding = '20px 30px';
+                    secretMsg.style.borderRadius = '15px';
+                    secretMsg.style.zIndex = '10000';
+                    secretMsg.style.fontFamily = "'Dancing Script', cursive";
+                    secretMsg.style.fontSize = '1.8rem';
+                    secretMsg.style.textAlign = 'center';
+                    secretMsg.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
+                    
+                    document.body.appendChild(secretMsg);
+                    
+                    // Animation
+                    gsap.from(secretMsg, {
+                        scale: 0,
+                        opacity: 0,
+                        duration: 0.5,
+                        ease: "back.out(1.7)"
+                    });
+                    
+                    // Confettis doux
+                    confetti({
+                        particleCount: 50,
+                        spread: 80,
+                        origin: { y: 0.5 },
+                        colors: ['#ff4d6d', '#ffb3c1', '#ffd700'],
+                        shapes: ['heart'],
+                        scalar: 1
+                    });
+                    
+                    // Supprimer après 3 secondes
+                    setTimeout(() => {
+                        gsap.to(secretMsg, {
+                            scale: 0,
+                            opacity: 0,
+                            duration: 0.5,
+                            onComplete: () => {
+                                if (secretMsg.parentNode) {
+                                    secretMsg.parentNode.removeChild(secretMsg);
+                                }
+                            }
+                        });
+                    }, 3000);
+                    
+                    clickCount = 0;
+                }
+                
+                clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 500);
+            }
+        });
+
+    </script>
+</body>
+</html>

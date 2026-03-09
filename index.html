@@ -3,872 +3,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma Valentine ✨ | 3 x 1000</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>Joyeux Anniversaire 🎂</title>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=DM+Sans:wght@300;400;500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
         :root {
-            --primary: #ff4d6d;
-            --secondary: #ffb3c1;
-            --accent: #ff758f;
-            --dark: #1a0a0f;
-            --text: #590d22;
+            --bg: #0d0d0d;
+            --bg2: #141414;
+            --card: #1a1a1a;
+            --border: rgba(255,255,255,0.07);
+            --gold: #f5c842;
+            --gold2: #e8a415;
+            --cream: #f7f0e6;
+            --teal: #4ecdc4;
+            --pink: #ff6b9d;
+            --orange: #ff9a3c;
             --white: #ffffff;
-            --gold: #ffd700;
-            --shadow: rgba(0, 0, 0, 0.3);
+            --text-muted: rgba(255,255,255,0.5);
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--white);
             overflow-x: hidden;
             min-height: 100vh;
-            position: relative;
-            background: linear-gradient(135deg, var(--dark) 0%, #2d1319 100%);
-            color: var(--white);
         }
 
-        /* --- Loader --- */
+        /* ====== LOADER ====== */
         .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            position: fixed; inset: 0;
+            background: var(--bg);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
             z-index: 10000;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 0.8s, visibility 0.8s;
         }
-
-        .loader-heart {
-            font-size: 80px;
-            animation: pulse 1.5s ease-in-out infinite;
-            margin-bottom: 20px;
+        .loader-cake {
+            font-size: 72px;
+            animation: cakeBounce 1.2s ease-in-out infinite;
+            margin-bottom: 24px;
         }
-
         .loader-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
-            color: var(--secondary);
-            opacity: 0.8;
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        @keyframes cakeBounce {
+            0%,100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
         }
 
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* --- Cœurs flottants --- */
-        .floating-hearts {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .heart {
-            position: absolute;
-            font-size: 20px;
-            opacity: 0;
-            animation: floatHearts linear infinite;
-        }
-
-        @keyframes floatHearts {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            90% {
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* --- Container principal --- */
-        .main-wrapper {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        /* --- Carte du questionnaire --- */
-        .question-card {
-            background: linear-gradient(145deg, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0.05) 100%);
-            backdrop-filter: blur(30px) saturate(180%);
-            border-radius: 35px;
-            padding: 3.5rem 2.5rem;
-            box-shadow: 
-                0 8px 32px 0 rgba(255, 77, 109, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.1),
-                inset 0 0 60px rgba(255, 179, 193, 0.05);
-            border: 2px solid rgba(255, 179, 193, 0.2);
-            position: relative;
+        /* ====== PARTICULES ====== */
+        .particles {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 1;
             overflow: hidden;
-            max-width: 550px;
-            width: 100%;
-            text-align: center;
         }
-
-        /* Effet de brillance animée */
-        .question-card::before {
-            content: '';
+        .particle {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-            animation: rotateBrilliance 20s linear infinite;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+        @keyframes particleFloat {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-120px) rotate(720deg); opacity: 0; }
         }
 
-        @keyframes rotateBrilliance {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* ====== MAIN ====== */
+        .main-wrapper {
+            position: relative; z-index: 10;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 30px 20px;
         }
 
-        /* Bordure animée */
+        /* ====== QUESTION CARD ====== */
+        .question-card {
+            position: relative;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem 2.5rem 2.5rem;
+            max-width: 480px; width: 100%;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Gold corner accents */
+        .question-card::before,
         .question-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 35px;
-            padding: 2px;
-            background: linear-gradient(45deg, 
-                transparent, 
-                rgba(255, 77, 109, 0.5), 
-                transparent, 
-                rgba(255, 179, 193, 0.5), 
-                transparent);
-            background-size: 300% 300%;
-            animation: gradientBorder 5s ease infinite;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
+            width: 80px; height: 80px;
+            border-color: var(--gold);
+            border-style: solid;
+            opacity: 0.4;
+        }
+        .question-card::before {
+            top: 16px; left: 16px;
+            border-width: 2px 0 0 2px;
+            border-radius: 8px 0 0 0;
+        }
+        .question-card::after {
+            bottom: 16px; right: 16px;
+            border-width: 0 2px 2px 0;
+            border-radius: 0 0 8px 0;
+        }
+
+        /* Ambient glow */
+        .card-glow {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.08) 0%, transparent 70%);
             pointer-events: none;
         }
 
-        @keyframes gradientBorder {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* --- Photo profil --- */
         .profile-image {
-            width: 140px;
-            height: 140px;
+            width: 120px; height: 120px;
             border-radius: 50%;
-            margin: 0 auto 2rem;
-            border: 5px solid rgba(255, 77, 109, 0.6);
-            box-shadow: 
-                0 15px 50px rgba(255, 77, 109, 0.5),
-                0 0 0 10px rgba(255, 255, 255, 0.1),
-                inset 0 0 20px rgba(255, 77, 109, 0.2);
+            border: 3px solid var(--gold);
             object-fit: cover;
             display: block;
-            position: relative;
-            z-index: 2;
-            animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+            margin: 0 auto 1.8rem;
+            position: relative; z-index: 2;
+            box-shadow: 0 0 0 8px rgba(245,200,66,0.1), 0 20px 40px rgba(0,0,0,0.4);
+            animation: profilePulse 4s ease-in-out infinite;
+        }
+        @keyframes profilePulse {
+            0%,100% { box-shadow: 0 0 0 8px rgba(245,200,66,0.1), 0 20px 40px rgba(0,0,0,0.4); }
+            50% { box-shadow: 0 0 0 14px rgba(245,200,66,0.15), 0 20px 40px rgba(0,0,0,0.4); }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
+        .question-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+            position: relative; z-index: 2;
         }
 
-        @keyframes glow {
-            0% { 
-                box-shadow: 
-                    0 15px 50px rgba(255, 77, 109, 0.5),
-                    0 0 0 10px rgba(255, 255, 255, 0.1),
-                    inset 0 0 20px rgba(255, 77, 109, 0.2);
-            }
-            100% { 
-                box-shadow: 
-                    0 15px 60px rgba(255, 77, 109, 0.8),
-                    0 0 0 10px rgba(255, 255, 255, 0.2),
-                    inset 0 0 30px rgba(255, 77, 109, 0.4),
-                    0 0 40px rgba(255, 77, 109, 0.6);
-            }
-        }
-
-        /* --- Titre questionnaire --- */
         .question-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 6vw, 3.2rem);
-            background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-            line-height: 1.3;
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
-            animation: titleShine 3s ease-in-out infinite;
-        }
-
-        @keyframes titleShine {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.2); }
+            font-family: 'Abril Fatface', serif;
+            font-size: clamp(2.2rem, 6vw, 3.2rem);
+            line-height: 1.15;
+            color: var(--cream);
+            margin-bottom: 0.6rem;
+            position: relative; z-index: 2;
         }
 
         .question-subtitle {
             display: block;
-            font-size: clamp(1.3rem, 4.5vw, 1.8rem);
-            margin-top: 0.8rem;
-            font-family: 'Dancing Script', cursive;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-family: 'Caveat', cursive;
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            color: var(--gold);
+            margin-top: 0.5rem;
         }
 
-        /* --- Boutons questionnaire --- */
+        .question-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 1rem 0 2rem;
+            line-height: 1.6;
+            position: relative; z-index: 2;
+        }
+
+        /* Buttons */
         .question-buttons {
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 14px;
             position: relative;
-            min-height: 200px;
+            min-height: 160px;
             z-index: 2;
-            padding: 1.5rem 0;
         }
 
         .btn {
-            padding: 18px 60px;
+            padding: 16px 56px;
             border: none;
-            border-radius: 50px;
-            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            outline: none;
-            position: relative;
-            overflow: hidden;
-            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:active::before {
-            width: 400px;
-            height: 400px;
         }
 
         #btn-yes {
-            background: linear-gradient(135deg, var(--primary) 0%, #ff0a54 50%, var(--accent) 100%);
-            background-size: 200% 200%;
-            color: white;
-            box-shadow: 
-                0 15px 40px rgba(255, 77, 109, 0.6),
-                0 0 30px rgba(255, 77, 109, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            z-index: 100;
-            transform-origin: center;
-            animation: buttonGradient 3s ease infinite;
+            background: var(--gold);
+            color: #0d0d0d;
+            box-shadow: 0 8px 30px rgba(245,200,66,0.35);
         }
-
-        @keyframes buttonGradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
         #btn-yes:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 
-                0 20px 50px rgba(255, 77, 109, 0.8),
-                0 0 40px rgba(255, 77, 109, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        #btn-yes:active {
-            transform: translateY(-2px) scale(1.02);
+            background: #ffe066;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(245,200,66,0.5);
         }
 
         #btn-no {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-            border: 3px solid rgba(255, 77, 109, 0.5);
-            box-shadow: 
-                0 8px 20px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.12);
         }
-
         #btn-no:hover {
-            background: rgba(255, 77, 109, 0.15);
-            border-color: rgba(255, 77, 109, 0.8);
-            transform: translateY(-3px);
-            box-shadow: 
-                0 12px 25px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+            background: rgba(255,255,255,0.05);
         }
 
-        /* --- Bouton retour --- */
+        /* ====== CAROUSEL SECTION ====== */
+        .carousel-section { display: none; width: 100%; max-width: 720px; }
+
+        /* Back button */
         .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
+            position: absolute; top: 20px; left: 20px;
+            width: 44px; height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            font-size: 1.5rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 1.1rem;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.3s;
             z-index: 100;
         }
+        .back-button:hover { background: rgba(245,200,66,0.15); color: var(--gold); border-color: var(--gold); }
 
-        .back-button:hover {
-            background: rgba(255, 77, 109, 0.3);
-            border-color: var(--primary);
-            transform: scale(1.1);
-        }
-
-        /* --- Carrousel (caché initialement) --- */
-        .carousel-section {
-            display: none;
-            width: 100%;
-            max-width: 800px;
-            position: relative;
-        }
-
-        /* --- Header carrousel --- */
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            max-width: 800px;
+            margin-bottom: 28px;
             padding: 0 20px;
         }
-
         .title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            background: linear-gradient(135deg, var(--white) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
+            font-family: 'Abril Fatface', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--cream);
             line-height: 1.2;
+            margin-bottom: 6px;
         }
-
         .subtitle {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            color: var(--secondary);
-            margin-bottom: 10px;
-        }
-
-        .date {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 1px;
-        }
-
-        /* --- Container du carrousel --- */
-        .carousel-container {
-            width: 100%;
-            max-width: 600px;
-            position: relative;
-            margin: 0 auto;
-        }
-
-        /* --- Carrousel --- */
-        .carousel {
-            width: 100%;
-            height: 500px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 25px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-        }
-
-        @media (max-width: 768px) {
-            .carousel {
-                height: 450px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .carousel {
-                height: 400px;
-            }
-        }
-
-        /* --- Cartes --- */
-        .card {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: transform 0.8s ease, opacity 0.8s ease;
-            border-radius: 25px;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        /* Overlay sombre pour chaque carte */
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                135deg, 
-                rgba(0, 0, 0, 0.7) 0%, 
-                rgba(26, 10, 15, 0.8) 50%,
-                rgba(89, 13, 34, 0.7) 100%
-            );
-            z-index: 2;
-        }
-
-        .card.active {
-            opacity: 1;
-            transform: translateX(0);
-            z-index: 3;
-        }
-
-        .card.prev {
-            transform: translateX(-100%);
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .card.next {
-            transform: translateX(100%);
-            opacity: 0;
-            z-index: 1;
-        }
-
-        /* Images de fond pour chaque carte - UTILISATION DES FICHIERS LOCAUX */
-        #card1 {
-            background-image: url('fond1.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        #card2 {
-            background-image: url('fond2.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        #card3 {
-            background-image: url('fond3.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        #card4 {
-            background-image: url('fond4.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-         #card5 {
-            background-image: url('fond1.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .card-number {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.2);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            backdrop-filter: blur(5px);
-            z-index: 4;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-content {
-            width: 100%;
-            max-width: 500px;
-            padding: 40px 30px;
-            position: relative;
-            z-index: 3;
-        }
-
-        .card-text {
-            font-size: clamp(1.1rem, 3vw, 1.4rem);
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-weight: 400;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-            position: relative;
-            z-index: 3;
-        }
-
-        .special-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-family: 'Caveat', cursive;
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
             color: var(--gold);
-            margin: 20px 0;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.9);
-            animation: glow 2s ease-in-out infinite alternate;
-            position: relative;
-            z-index: 3;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.9); }
-            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.9); }
-        }
-
-        .signature {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.8rem, 4vw, 2.2rem);
-            color: var(--secondary);
-            margin-top: 30px;
-            text-align: right;
-            width: 100%;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-            position: relative;
-            z-index: 3;
-        }
-
-        /* --- Contrôles du carrousel --- */
-        .carousel-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-            gap: 20px;
-        }
-
-        .carousel-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .carousel-btn:hover {
-            background: rgba(255, 77, 109, 0.3);
-            border-color: var(--primary);
-            transform: scale(1.1);
-        }
-
-        .carousel-btn:active {
-            transform: scale(0.95);
-        }
-
-        .carousel-dots {
-            display: flex;
-            gap: 10px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
-        }
-
-        /* --- Indicateur de progression --- */
+        /* Progress */
         .progress-container {
-            width: 100%;
-            max-width: 600px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 100%; max-width: 600px;
+            height: 3px;
+            background: rgba(255,255,255,0.07);
             border-radius: 2px;
-            margin: 30px auto 20px;
+            margin: 0 auto 24px;
             overflow: hidden;
         }
-
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            background: linear-gradient(90deg, var(--gold), var(--orange));
             width: 0%;
             transition: width 0.5s ease;
         }
 
-        /* --- Footer --- */
+        /* Carousel */
+        .carousel-container { max-width: 600px; margin: 0 auto; width: 100%; }
+        .carousel {
+            width: 100%; height: 480px;
+            position: relative; overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        /* Cards */
+        .card {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.7s cubic-bezier(0.77,0,0.175,1), opacity 0.7s ease;
+            border-radius: 20px;
+            z-index: 1; overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(160deg, rgba(13,13,13,0.75) 0%, rgba(13,13,13,0.92) 100%);
+            z-index: 2;
+        }
+        .card.active { opacity: 1; transform: translateX(0); z-index: 3; }
+        .card.prev { transform: translateX(-100%); opacity: 0; z-index: 1; }
+        .card.next { transform: translateX(100%); opacity: 0; z-index: 1; }
+
+        #card1 { background: url('fond1.png') center/cover no-repeat; }
+        #card2 { background: url('fond2.jpg') center/cover no-repeat; }
+        #card3 { background: url('fond3.jpg') center/cover no-repeat; }
+        #card4 { background: url('fond4.jpg') center/cover no-repeat; }
+        #card5 { background: url('fond1.png') center/cover no-repeat; }
+
+        .card-number {
+            position: absolute; top: 18px; right: 18px;
+            font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gold);
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px; border-radius: 20px;
+            border: 1px solid rgba(245,200,66,0.3);
+            z-index: 4;
+        }
+
+        .card-content {
+            width: 100%; max-width: 480px;
+            padding: 40px 32px;
+            position: relative; z-index: 3;
+        }
+
+        .card-label {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid rgba(245,200,66,0.4);
+            border-radius: 20px;
+            padding: 4px 14px;
+            margin-bottom: 20px;
+        }
+
+        .card-text {
+            font-size: clamp(1rem, 2.8vw, 1.25rem);
+            line-height: 1.75;
+            color: rgba(255,255,255,0.88);
+            font-weight: 300;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+        }
+
+        .special-text {
+            font-family: 'Abril Fatface', serif;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            color: var(--gold);
+            margin: 18px 0;
+            line-height: 1.2;
+            text-shadow: 0 0 30px rgba(245,200,66,0.5);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%,100% { text-shadow: 0 0 20px rgba(245,200,66,0.4); }
+            50% { text-shadow: 0 0 40px rgba(245,200,66,0.8), 0 0 60px rgba(245,200,66,0.3); }
+        }
+
+        .signature {
+            font-family: 'Caveat', cursive;
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            color: var(--teal);
+            margin-top: 28px;
+            text-align: right;
+        }
+
+        /* Controls */
+        .carousel-controls {
+            display: flex; justify-content: center; align-items: center;
+            margin-top: 24px; gap: 16px;
+        }
+        .carousel-btn {
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.3s;
+        }
+        .carousel-btn:hover { background: rgba(245,200,66,0.12); color: var(--gold); border-color: rgba(245,200,66,0.4); }
+
+        .carousel-dots { display: flex; gap: 8px; align-items: center; }
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot.active { background: var(--gold); transform: scale(1.4); }
+
+        /* Footer */
         .footer {
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
+            margin-top: 32px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.8;
         }
-
         .heartbeat {
             display: inline-block;
-            animation: heartbeat 1.5s ease-in-out infinite;
-            color: var(--primary);
-            margin: 0 5px;
+            animation: hb 1.5s ease-in-out infinite;
+            color: var(--pink);
+        }
+        @keyframes hb {
+            0%,100% { transform: scale(1); }
+            10%,30% { transform: scale(1.25); }
+            20%,40% { transform: scale(1.05); }
         }
 
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            10%, 30% { transform: scale(1.15); }
-            20%, 40% { transform: scale(1.05); }
-        }
-
-        /* --- Message d'encouragement --- */
+        /* Encouragement */
         .encouragement {
-            position: fixed;
-            top: 50%;
-            left: 50%;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(3rem, 10vw, 6rem);
-            font-weight: bold;
-            color: var(--primary);
+            font-family: 'Abril Fatface', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: var(--gold);
             opacity: 0;
             pointer-events: none;
             z-index: 1000;
-            text-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+            text-shadow: 0 0 30px rgba(245,200,66,0.6);
         }
 
-        /* --- Responsive --- */
+        /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
-            .main-wrapper {
-                padding: 15px;
-            }
-            
-            .question-card {
-                padding: 2.5rem 2rem;
-            }
-            
-            .profile-image {
-                width: 110px;
-                height: 110px;
-                margin-bottom: 1.5rem;
-            }
-            
-            .question-buttons {
-                min-height: 170px;
-                gap: 20px;
-            }
-            
-            .btn {
-                padding: 16px 45px;
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .carousel {
-                height: 420px;
-            }
-            
-            .card-content {
-                padding: 30px 20px;
-            }
-            
-            .card-text {
-                font-size: 1.2rem;
-            }
-            
-            .back-button {
-                top: 15px;
-                left: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
+            .question-card { padding: 2.5rem 1.8rem; }
+            .profile-image { width: 100px; height: 100px; }
+            .carousel { height: 420px; }
+            .card-content { padding: 28px 20px; }
+            .btn { padding: 14px 40px; width: 100%; max-width: 280px; }
         }
-
         @media (max-width: 480px) {
-            .question-card {
-                padding: 2rem 1.5rem;
-                border-radius: 25px;
-            }
-            
-            .profile-image {
-                width: 90px;
-                height: 90px;
-            }
-            
-            .btn {
-                padding: 14px 35px;
-                font-size: 1rem;
-            }
-            
-            .carousel {
-                height: 380px;
-                border-radius: 20px;
-            }
-            
-            .card-content {
-                padding: 25px 15px;
-            }
-            
-            .card-text {
-                font-size: 1.1rem;
-                line-height: 1.5;
-            }
-            
-            .special-text {
-                font-size: 1.8rem;
-                margin: 15px 0;
-            }
-            
-            .carousel-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
-            
-            .back-button {
-                top: 10px;
-                left: 10px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
+            .question-card { padding: 2rem 1.5rem; border-radius: 18px; }
+            .profile-image { width: 85px; height: 85px; }
+            .carousel { height: 370px; border-radius: 16px; }
+            .card-content { padding: 22px 16px; }
         }
-
-        @media (max-height: 700px) and (orientation: landscape) {
-            .main-wrapper {
-                padding: 10px;
-            }
-            
-            .question-card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .profile-image {
-                width: 70px;
-                height: 70px;
-                margin-bottom: 1rem;
-            }
-            
-            .question-buttons {
-                min-height: 120px;
-                gap: 12px;
-            }
-            
-            .btn {
-                padding: 12px 30px;
-                font-size: 0.9rem;
-            }
-            
-            .carousel {
-                height: 300px;
-            }
-            
-            .card-content {
-                padding: 20px 15px;
-            }
-            
-            .back-button {
-                top: 10px;
-                left: 10px;
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-        }
-
-        /* --- Accessibilité --- */
         @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
+            *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
@@ -880,225 +465,189 @@
 
     <!-- Loader -->
     <div class="loader" id="loader">
-        <div class="loader-heart">❤️</div>
-        <div class="loader-text">Prépare-toi à un voyage du cœur...</div>
+        <div class="loader-cake">🎂</div>
+        <div class="loader-text">Un instant magique se prépare...</div>
     </div>
 
-    <!-- Cœurs flottants -->
-    <div class="floating-hearts" id="hearts-bg"></div>
+    <!-- Particules -->
+    <div class="particles" id="particles-bg"></div>
 
-    <!-- Message d'encouragement -->
+    <!-- Encouragement -->
     <div class="encouragement" id="encouragement"></div>
 
     <!-- Contenu principal -->
     <div class="main-wrapper">
-        
-        <!-- Carte du questionnaire (visible au début) -->
+
+        <!-- Carte questionnaire -->
         <div class="question-card" id="question-card">
+            <div class="card-glow"></div>
+
             <img src="me.png" alt="Photo" class="profile-image" id="profile-pic">
-            
+
+            <div class="question-eyebrow">✦ Message personnel ✦</div>
+
             <h1 class="question-title">
-                Joyeuse Saint-Valentin... 
+                Joyeux Anniversaire
                 <span class="question-subtitle">Veux-tu découvrir mon message ?</span>
             </h1>
-            
+
+            <p class="question-desc">Un message spécialement préparé pour toi, avec tout ce que les mots peuvent porter.</p>
+
             <div class="question-buttons">
-                <button class="btn" id="btn-yes">OUI ! ❤️</button>
+                <button class="btn" id="btn-yes">Oui, je veux voir ! 🎉</button>
                 <button class="btn" id="btn-no">Non</button>
             </div>
         </div>
 
-        <!-- Section carrousel (cachée au début) -->
+        <!-- Section carrousel -->
         <div class="carousel-section" id="carousel-section">
-            <!-- Bouton retour -->
             <button class="back-button" id="back-btn">
                 <i class="fas fa-arrow-left"></i>
             </button>
 
-            <!-- Header -->
             <div class="header">
-                <h1 class="title">Pour toi, mon amour</h1>
-                <div class="subtitle">En ce 14 février 2026</div>
-                <div class="date"></div>
+                <h1 class="title">Pour toi, aujourd'hui</h1>
+                <div class="subtitle">En ce jour si particulier ✨</div>
             </div>
 
-            <!-- Indicateur de progression -->
             <div class="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
 
-            <!-- Container du carrousel -->
             <div class="carousel-container">
                 <div class="carousel" id="carousel">
-                    
+
                     <!-- Carte 1 -->
                     <div class="card active" id="card1">
-                        <div class="card-number">1</div>
+                        <div class="card-number">01 / 05</div>
                         <div class="card-content">
+                            <div class="card-label">Le début</div>
                             <p class="card-text">
                                 Depuis le 08 Mars 2025 tu partages ma vie et ce temps passé avec toi est l'une des plus belles choses qui me soit arrivée.
                             </p>
                         </div>
                     </div>
-                    
+
                     <!-- Carte 2 -->
                     <div class="card" id="card2">
-                        <div class="card-number">2</div>
+                        <div class="card-number">02 / 05</div>
                         <div class="card-content">
-                            <p class="card-text">
-                                Tout en souhaitant que ce soit à l'infini,
-                            </p>
-                            <div class="special-text">plus que 3 X 1000</div>
-                            <p class="card-text">
-                                et bien au-delà de l'éternité.
-                            </p>
+                            <div class="card-label">L'infini</div>
+                            <p class="card-text">Tout en souhaitant que ce soit à l'infini,</p>
+                            <div class="special-text">plus que 3 × 1000</div>
+                            <p class="card-text">et bien au-delà de l'éternité.</p>
                         </div>
                     </div>
-                    
+
                     <!-- Carte 3 -->
                     <div class="card" id="card3">
-                        <div class="card-number">3</div>
+                        <div class="card-number">03 / 05</div>
                         <div class="card-content">
+                            <div class="card-label">Ce que tu es</div>
                             <p class="card-text">
                                 Tu es apparue dans un moment où j'avais l'impression de me noyer et tu as été une bouteille d'oxygène qui m'assure de ne pas sombrer.
                             </p>
                         </div>
                     </div>
-                    
+
                     <!-- Carte 4 -->
                     <div class="card" id="card4">
-                        <div class="card-number">4</div>
+                        <div class="card-number">04 / 05</div>
                         <div class="card-content">
+                            <div class="card-label">Aujourd'hui</div>
                             <p class="card-text">
-                                En ce 14 février et après ces presque une année, je suis heureux et fier d'être à tes côtés.
+                                En ce jour d'anniversaire, après ces presque une année, je suis heureux et fier d'être à tes côtés.
                             </p>
                         </div>
                     </div>
-                    
+
                     <!-- Carte 5 -->
                     <div class="card" id="card5">
-                        <div class="card-number">5</div>
+                        <div class="card-number">05 / 05</div>
                         <div class="card-content">
-                            <div class="special-text" style="margin-bottom: 40px;">Je t'aime</div>
-                            <p class="card-text">
-                                Plus que les mots ne peuvent le dire, plus que le temps ne peut le mesurer.
-                            </p>
-                            <div class="signature">Pour l'éternité</div>
+                            <div class="card-label">Pour toujours</div>
+                            <div class="special-text">Je t'aime</div>
+                            <p class="card-text">Plus que les mots ne peuvent le dire, plus que le temps ne peut le mesurer.</p>
+                            <div class="signature">Pour l'éternité ✦</div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
-            <!-- Contrôles du carrousel -->
+            <!-- Contrôles -->
             <div class="carousel-controls">
-                <button class="carousel-btn" id="prev-btn">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                
-                <div class="carousel-dots" id="dots-container">
-                    <!-- Les points seront générés par JavaScript -->
-                </div>
-                
-                <button class="carousel-btn" id="next-btn">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                <button class="carousel-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-dots" id="dots-container"></div>
+                <button class="carousel-btn" id="next-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
 
             <!-- Footer -->
             <div class="footer">
-                <p>
-                    Créé avec <span class="heartbeat">❤️</span> pour la plus merveilleuse des personnes
-                    <br>
-                    Chaque carte est un morceau de mon cœur
-                </p>
+                <p>Créé avec <span class="heartbeat">♥</span> pour le plus beau des anniversaires</p>
             </div>
         </div>
 
     </div>
 
     <script>
-        // =================== INITIALISATION ===================
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // Cacher le loader après le chargement
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 document.getElementById('loader').classList.add('hidden');
-                
-                // Animation d'entrée de la carte question
-                gsap.from('#question-card', {
-                    opacity: 0,
-                    y: 60,
-                    scale: 0.9,
-                    duration: 1.2,
-                    ease: "back.out(1.4)"
-                });
-                
-                // Démarrer les cœurs flottants
-                createFloatingHearts();
-                
-                // Initialiser le questionnaire
+                gsap.from('#question-card', { opacity: 0, y: 50, scale: 0.95, duration: 1, ease: "power3.out" });
+                createParticles();
                 initQuestionnaire();
-                
             }, 1000);
         });
 
-        // =================== CŒURS FLOTTANTS ===================
-        function createFloatingHearts() {
-            const heartsContainer = document.getElementById('hearts-bg');
-            const hearts = ['❤️', '💖', '💗', '💓', '💞', '💕', '💝'];
-            
-            for (let i = 0; i < 15; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-                
-                // Position aléatoire
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
-                
-                // Animation aléatoire
-                const duration = Math.random() * 10 + 10;
-                heart.style.animationDuration = duration + 's';
-                heart.style.animationDelay = Math.random() * 5 + 's';
-                
-                heartsContainer.appendChild(heart);
-                
-                // Supprimer après l'animation
-                setTimeout(() => {
-                    if (heart.parentNode) {
-                        heart.parentNode.removeChild(heart);
-                    }
-                }, duration * 1000);
+        // ===== PARTICULES =====
+        function createParticles() {
+            const container = document.getElementById('particles-bg');
+            const colors = ['#f5c842','#ff6b9d','#4ecdc4','#ff9a3c','#ffffff'];
+            const emojis = ['🎂','🎉','🎈','✨','⭐','🌟','🎁'];
+
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                const useEmoji = Math.random() > 0.5;
+                p.className = 'particle';
+
+                if (useEmoji) {
+                    p.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                    p.style.fontSize = (Math.random() * 16 + 12) + 'px';
+                    p.style.background = 'none';
+                    p.style.borderRadius = '0';
+                } else {
+                    const size = Math.random() * 8 + 4;
+                    p.style.width = size + 'px';
+                    p.style.height = size + 'px';
+                    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                }
+
+                p.style.left = Math.random() * 100 + 'vw';
+                const dur = Math.random() * 12 + 12;
+                p.style.animationDuration = dur + 's';
+                p.style.animationDelay = Math.random() * 8 + 's';
+                container.appendChild(p);
             }
         }
 
-        // =================== QUESTIONNAIRE ===================
-        let noClickCount = 0;
+        // ===== QUESTIONNAIRE =====
+        let noCount = 0;
         let yesScale = 1;
-        
-        // Phrases amusantes pour le bouton "Non"
         const phrases = [
             "Tu es sûre ? 🥺",
-            "Réfléchis bien... 💭",
-            "Mon cœur pleure... 😢",
-            "Vraiment vraiment ? 💔",
-            "Regarde ce ÉNORME OUI ! 👀",
-            "Allez s'il te plaît ! 🙏",
+            "Réfléchis bien... 🤔",
+            "C'est mon cœur qui parle 💛",
+            "Vraiment vraiment ? 😢",
+            "Regarde ce grand OUI ! 👀",
+            "Allez s'il te plaît ! 🎂",
             "Tu vas craquer ! 😊",
-            "Juste un petit OUI ? 🌹",
-            "Je sais que tu veux dire OUI ! 💖",
-            "Dernier chance ! ✨"
+            "Juste un petit OUI ? 🌟",
+            "Je sais que tu veux dire OUI ! 🎉",
+            "Dernière chance ! ✨"
         ];
-
-        // Messages d'encouragement
-        const encouragements = [
-            "Courage ! 💪",
-            "Presque ! 🎯",
-            "Continue ! 🌟",
-            "Tu y es presque ! ✨",
-            "Encore ! 🔥"
-        ];
+        const encouragements = ["Courage ! 💪","Presque ! 🎯","Continue ! ⭐","Tu y es ! ✨","Encore ! 🔥"];
 
         function initQuestionnaire() {
             const btnYes = document.getElementById('btn-yes');
@@ -1106,116 +655,37 @@
             const questionCard = document.getElementById('question-card');
             const carouselSection = document.getElementById('carousel-section');
             const questionTitle = document.querySelector('.question-title');
-            const encouragement = document.getElementById('encouragement');
+            const enc = document.getElementById('encouragement');
 
-            // --- Logique bouton NON ---
             btnNo.addEventListener('click', () => {
-                noClickCount++;
-                
-                // Agrandir le bouton OUI
-                yesScale += 0.25;
+                noCount++;
+                yesScale = Math.min(yesScale + 0.2, 2);
                 btnYes.style.transform = `scale(${yesScale})`;
-                
-                // Changer le texte de la question
-                const phraseIndex = Math.min(noClickCount - 1, phrases.length - 1);
-                questionTitle.innerHTML = `${phrases[phraseIndex]}<span class="question-subtitle">Veux-tu découvrir mon message ?</span>`;
 
-                // Afficher message d'encouragement
-                if (noClickCount % 2 === 0) {
-                    showEncouragement();
+                const phraseIdx = Math.min(noCount - 1, phrases.length - 1);
+                questionTitle.innerHTML = `${phrases[phraseIdx]}<span class="question-subtitle">Veux-tu découvrir mon message ?</span>`;
+
+                if (noCount % 2 === 0) {
+                    const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
+                    enc.textContent = msg;
+                    gsap.to(enc, { opacity: 1, scale: 1.1, duration: 0.3, onComplete: () => {
+                        gsap.to(enc, { opacity: 0, scale: 1, duration: 0.3, delay: 0.6 });
+                    }});
                 }
 
-                // Déplacer le bouton NON
+                // Move No button
                 const container = document.querySelector('.question-buttons');
                 const rect = container.getBoundingClientRect();
                 const btnRect = btnNo.getBoundingClientRect();
-                
-                const maxX = (rect.width - btnRect.width) / 2 - 30;
-                const maxY = (rect.height - btnRect.height) / 2 - 30;
-                
-                const x = (Math.random() - 0.5) * maxX;
-                const y = (Math.random() - 0.5) * maxY;
-                
-                gsap.to(btnNo, { 
-                    x: x, 
-                    y: y, 
-                    rotation: (Math.random() - 0.5) * 20,
-                    duration: 0.5, 
-                    ease: "back.out(2)" 
-                });
-
-                // Secouer la carte
-                gsap.to(questionCard, {
-                    x: 8,
-                    yoyo: true,
-                    repeat: 7,
-                    duration: 0.05,
-                    onComplete: () => gsap.set(questionCard, { x: 0 })
-                });
-
-                // Effet visuel supplémentaire
-                createBurstHearts(btnNo);
+                const maxX = (rect.width - btnRect.width) / 2 - 20;
+                const maxY = (rect.height - btnRect.height) / 2 - 20;
+                gsap.to(btnNo, { x: (Math.random()-0.5)*maxX, y: (Math.random()-0.5)*maxY, rotation: (Math.random()-0.5)*15, duration: 0.4, ease: "back.out(2)" });
+                gsap.to(questionCard, { x: 6, yoyo: true, repeat: 5, duration: 0.06, onComplete: () => gsap.set(questionCard, {x:0}) });
             });
 
-            // --- Messages d'encouragement ---
-            function showEncouragement() {
-                const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
-                encouragement.textContent = msg;
-                
-                gsap.to(encouragement, {
-                    opacity: 1,
-                    scale: 1.2,
-                    duration: 0.3,
-                    onComplete: () => {
-                        gsap.to(encouragement, {
-                            opacity: 0,
-                            scale: 1,
-                            duration: 0.3,
-                            delay: 0.5
-                        });
-                    }
-                });
-            }
-
-            // --- Explosion de cœurs sur le bouton NON ---
-            function createBurstHearts(element) {
-                const rect = element.getBoundingClientRect();
-                for (let i = 0; i < 5; i++) {
-                    const heart = document.createElement('div');
-                    heart.innerHTML = '💔';
-                    heart.style.position = 'fixed';
-                    heart.style.left = rect.left + rect.width / 2 + 'px';
-                    heart.style.top = rect.top + rect.height / 2 + 'px';
-                    heart.style.fontSize = '20px';
-                    heart.style.pointerEvents = 'none';
-                    heart.style.zIndex = '1000';
-                    document.body.appendChild(heart);
-
-                    const angle = (Math.PI * 2 * i) / 5;
-                    const distance = 50;
-                    const x = Math.cos(angle) * distance;
-                    const y = Math.sin(angle) * distance;
-
-                    gsap.to(heart, {
-                        x: x,
-                        y: y,
-                        opacity: 0,
-                        duration: 0.8,
-                        ease: "power2.out",
-                        onComplete: () => heart.remove()
-                    });
-                }
-            }
-
-            // --- Logique bouton OUI ---
             btnYes.addEventListener('click', () => {
-                // Animation de sortie spectaculaire de la carte question
-                gsap.to(questionCard, { 
-                    opacity: 0, 
-                    scale: 0.7, 
-                    rotationY: 360,
-                    duration: 1.2, 
-                    ease: "power4.in",
+                gsap.to(questionCard, {
+                    opacity: 0, scale: 0.8, y: -40, duration: 0.9, ease: "power3.in",
                     onComplete: () => {
                         questionCard.style.display = 'none';
                         carouselSection.style.display = 'block';
@@ -1224,338 +694,133 @@
                 });
             });
 
-            // --- Easter egg: clic sur l'image de profil ---
             document.getElementById('profile-pic').addEventListener('click', () => {
-                gsap.to('#profile-pic', {
-                    rotation: 360,
-                    scale: 1.2,
-                    duration: 0.5,
-                    ease: "back.out(2)",
-                    onComplete: () => {
-                        gsap.to('#profile-pic', {
-                            rotation: 0,
-                            scale: 1,
-                            duration: 0.3
-                        });
-                    }
-                });
-
-                // Mini explosion de cœurs
-                confetti({
-                    particleCount: 20,
-                    spread: 60,
-                    origin: { x: 0.5, y: 0.3 },
-                    colors: ['#ff4d6d', '#ffb3c1'],
-                    shapes: ['heart'],
-                    scalar: 0.8
-                });
+                gsap.to('#profile-pic', { rotation: 360, scale: 1.15, duration: 0.5, ease: "back.out(2)", onComplete: () => gsap.to('#profile-pic', { rotation: 0, scale: 1, duration: 0.3 }) });
+                confetti({ particleCount: 30, spread: 70, origin: {x:0.5, y:0.3}, colors: ['#f5c842','#ff6b9d','#4ecdc4'], shapes: ['circle'], scalar: 0.9 });
             });
         }
 
-        // =================== CARROUSEL ===================
+        // ===== CAROUSEL =====
         function showCarousel() {
-            // Animation d'entrée du carrousel
-            gsap.from('#carousel-section', {
-                opacity: 0,
-                y: 60,
-                scale: 0.9,
-                duration: 1.2,
-                ease: "back.out(1.4)",
-                onComplete: () => {
-                    // Initialiser le carrousel
-                    initCarousel();
-                    
-                    // Petits confettis discrets après 5 secondes
-                    setTimeout(() => {
-                        createGentleConfetti();
-                    }, 5000);
-                }
-            });
-            
-            // Initialiser le bouton retour
-            document.getElementById('back-btn').addEventListener('click', goBackToQuestionnaire);
-        }
-        
-        // --- Fonction pour retourner au questionnaire ---
-        function goBackToQuestionnaire() {
-            const questionCard = document.getElementById('question-card');
-            const carouselSection = document.getElementById('carousel-section');
-            
-            // Animation de sortie du carrousel
-            gsap.to(carouselSection, {
-                opacity: 0,
-                scale: 0.7,
-                rotationY: -360,
-                duration: 1.2,
-                ease: "power4.in",
-                onComplete: () => {
-                    carouselSection.style.display = 'none';
-                    questionCard.style.display = 'block';
-                    
-                    // Animation d'entrée de la carte question
-                    gsap.from(questionCard, {
-                        opacity: 0,
-                        scale: 0.7,
-                        rotationY: 360,
-                        duration: 1.2,
-                        ease: "back.out(1.4)"
-                    });
-                }
-            });
+            gsap.from('#carousel-section', { opacity: 0, y: 50, scale: 0.97, duration: 1, ease: "power3.out", onComplete: () => {
+                initCarousel();
+                setTimeout(createGentleConfetti, 4000);
+            }});
+            document.getElementById('back-btn').addEventListener('click', goBack);
         }
 
-        let currentCardIndex = 0;
+        function goBack() {
+            const qc = document.getElementById('question-card');
+            const cs = document.getElementById('carousel-section');
+            gsap.to(cs, { opacity: 0, scale: 0.9, y: 30, duration: 0.8, ease: "power3.in", onComplete: () => {
+                cs.style.display = 'none';
+                qc.style.display = 'block';
+                gsap.from(qc, { opacity: 0, y: 40, scale: 0.95, duration: 0.9, ease: "power3.out" });
+            }});
+        }
+
+        let currentIdx = 0;
         const totalCards = 5;
-        let autoSlideInterval;
-        
+        let autoSlide;
+
         function initCarousel() {
-            // Créer les points indicateurs
-            const dotsContainer = document.getElementById('dots-container');
-            dotsContainer.innerHTML = ''; // Nettoyer d'abord
-            
+            const dots = document.getElementById('dots-container');
+            dots.innerHTML = '';
             for (let i = 0; i < totalCards; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                if (i === 0) dot.classList.add('active');
-                dot.dataset.index = i;
-                dot.addEventListener('click', () => goToCard(i));
-                dotsContainer.appendChild(dot);
+                const d = document.createElement('div');
+                d.className = 'dot' + (i===0?' active':'');
+                d.dataset.index = i;
+                d.addEventListener('click', () => goToCard(i));
+                dots.appendChild(d);
             }
-            
-            // Événements des boutons
-            document.getElementById('prev-btn').addEventListener('click', showPrevCard);
-            document.getElementById('next-btn').addEventListener('click', showNextCard);
-            
-            // Swipe sur mobile
+            document.getElementById('prev-btn').addEventListener('click', prevCard);
+            document.getElementById('next-btn').addEventListener('click', nextCard);
+
             let startX = 0;
-            let endX = 0;
-            
             const carousel = document.getElementById('carousel');
-            
-            carousel.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-            }, { passive: true });
-            
-            carousel.addEventListener('touchmove', (e) => {
-                endX = e.touches[0].clientX;
-            }, { passive: true });
-            
-            carousel.addEventListener('touchend', () => {
-                const diff = startX - endX;
-                const threshold = 50;
-                
-                if (Math.abs(diff) > threshold) {
-                    if (diff > 0) {
-                        showNextCard();
-                    } else {
-                        showPrevCard();
-                    }
-                }
+            carousel.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+            carousel.addEventListener('touchend', e => {
+                const diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) diff > 0 ? nextCard() : prevCard();
             });
-            
-            // Démarrer le défilement automatique APRÈS 15 secondes
-            setTimeout(() => {
-                startAutoSlide();
-            }, 15000);
-            
-            // Mettre à jour la barre de progression
-            updateProgressBar();
-        }
-        
-        function showNextCard() {
-            const nextIndex = (currentCardIndex + 1) % totalCards;
-            goToCard(nextIndex);
-        }
-        
-        function showPrevCard() {
-            const prevIndex = (currentCardIndex - 1 + totalCards) % totalCards;
-            goToCard(prevIndex);
-        }
-        
-        function goToCard(index) {
-            // Arrêter le défilement automatique temporairement
-            stopAutoSlide();
-            
-            // Mettre à jour les classes des cartes
-            const cards = document.querySelectorAll('.card');
-            const dots = document.querySelectorAll('.dot');
-            
-            // Retirer toutes les classes de toutes les cartes
-            cards.forEach(card => {
-                card.classList.remove('active', 'prev', 'next');
-            });
-            
-            // Retirer active de tous les dots
-            dots.forEach(dot => dot.classList.remove('active'));
-            
-            // Ajouter la classe active uniquement à la carte sélectionnée
-            cards[index].classList.add('active');
-            dots[index].classList.add('active');
-            
-            // Mettre à jour l'index courant
-            currentCardIndex = index;
-            
-            // Mettre à jour la barre de progression
-            updateProgressBar();
-            
-            // Redémarrer le défilement automatique après un délai
-            setTimeout(() => {
-                startAutoSlide();
-            }, 5000);
-            
-            // Petit effet de confettis pour certaines cartes
-            if (index === 1 || index === 4) {
-                setTimeout(() => {
-                    createMiniConfetti();
-                }, 300);
-            }
-        }
-        
-        function startAutoSlide() {
-            // Arrêter tout intervalle existant
-            stopAutoSlide();
-            
-            // Démarrer un nouvel intervalle
-            autoSlideInterval = setInterval(() => {
-                showNextCard();
-            }, 10000); // Changement toutes les 10 secondes
-        }
-        
-        function stopAutoSlide() {
-            if (autoSlideInterval) {
-                clearInterval(autoSlideInterval);
-                autoSlideInterval = null;
-            }
-        }
-        
-        function updateProgressBar() {
-            const progress = ((currentCardIndex + 1) / totalCards) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            setTimeout(startAuto, 15000);
+            updateProgress();
         }
 
-        // =================== EFFETS SPÉCIAUX ===================
+        function nextCard() { goToCard((currentIdx+1) % totalCards); }
+        function prevCard() { goToCard((currentIdx-1+totalCards) % totalCards); }
+
+        function goToCard(idx) {
+            stopAuto();
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active','prev','next'));
+            document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll('.card')[idx].classList.add('active');
+            document.querySelectorAll('.dot')[idx].classList.add('active');
+            currentIdx = idx;
+
+            // Update card number labels
+            document.querySelectorAll('.card-number').forEach((cn, i) => {
+                cn.textContent = `${String(i+1).padStart(2,'0')} / 05`;
+            });
+
+            updateProgress();
+            setTimeout(startAuto, 6000);
+            if (idx === 1 || idx === 4) setTimeout(createMiniConfetti, 400);
+        }
+
+        function startAuto() {
+            stopAuto();
+            autoSlide = setInterval(nextCard, 10000);
+        }
+        function stopAuto() { if (autoSlide) { clearInterval(autoSlide); autoSlide = null; } }
+        function updateProgress() {
+            document.getElementById('progress-bar').style.width = `${((currentIdx+1)/totalCards)*100}%`;
+        }
+
+        // ===== CONFETTI =====
         function createMiniConfetti() {
-            // Créer une petite explosion de confettis en forme de cœur
-            const colors = ['#ff4d6d', '#ffb3c1', '#ff758f', '#ff0a54'];
-            
-            confetti({
-                particleCount: 10,
-                spread: 50,
-                origin: { y: 0.6 },
-                colors: colors,
-                shapes: ['heart'],
-                scalar: 0.7,
-                gravity: 0.8,
-                ticks: 150
-            });
+            confetti({ particleCount: 12, spread: 55, origin: {y:0.6}, colors: ['#f5c842','#ff6b9d','#4ecdc4'], scalar: 0.7, gravity: 0.9, ticks: 130 });
         }
-        
-        // --- Confettis doux et discrets ---
         function createGentleConfetti() {
-            const colors = ['#ff4d6d', '#ffb3c1', '#ff758f'];
-            
-            // Un seul petit jet de confettis
-            confetti({
-                particleCount: 20,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: colors,
-                shapes: ['heart', 'circle'],
-                scalar: 0.8,
-                gravity: 0.8,
-                ticks: 200
-            });
+            confetti({ particleCount: 25, spread: 75, origin: {y:0.6}, colors: ['#f5c842','#ff6b9d','#4ecdc4','#ff9a3c'], shapes: ['circle'], scalar: 0.8, gravity: 0.8, ticks: 200 });
         }
 
-        // =================== GESTION DU TOUCHER POUR MOBILE ===================
-        let lastTouchEnd = 0;
-        
-        document.addEventListener('touchend', function(event) {
-            const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-        
-        // Empêcher le zoom sur iOS
-        document.addEventListener('touchstart', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-
-        // =================== EASTER EGG ===================
-        // Triple clic sur le titre du carrousel affiche un message secret
-        let clickCount = 0;
-        let clickTimer;
-        
-        document.addEventListener('click', function(e) {
+        // Triple click easter egg
+        let clickCount = 0, clickTimer;
+        document.addEventListener('click', e => {
             if (e.target.classList.contains('title')) {
                 clickCount++;
-                
                 if (clickCount === 3) {
-                    // Afficher un message secret
-                    const secretMsg = document.createElement('div');
-                    secretMsg.innerHTML = '✨ 3 X 1000 = l\'infini de mon amour pour toi ✨';
-                    secretMsg.style.position = 'fixed';
-                    secretMsg.style.top = '50%';
-                    secretMsg.style.left = '50%';
-                    secretMsg.style.transform = 'translate(-50%, -50%)';
-                    secretMsg.style.background = 'rgba(255, 77, 109, 0.9)';
-                    secretMsg.style.color = 'white';
-                    secretMsg.style.padding = '20px 30px';
-                    secretMsg.style.borderRadius = '15px';
-                    secretMsg.style.zIndex = '10000';
-                    secretMsg.style.fontFamily = "'Dancing Script', cursive";
-                    secretMsg.style.fontSize = '1.8rem';
-                    secretMsg.style.textAlign = 'center';
-                    secretMsg.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
-                    
-                    document.body.appendChild(secretMsg);
-                    
-                    // Animation
-                    gsap.from(secretMsg, {
-                        scale: 0,
-                        opacity: 0,
-                        duration: 0.5,
-                        ease: "back.out(1.7)"
+                    const msg = document.createElement('div');
+                    msg.innerHTML = '🎂 Bon anniversaire, pour toujours ! 🎂';
+                    Object.assign(msg.style, {
+                        position:'fixed', top:'50%', left:'50%',
+                        transform:'translate(-50%,-50%)',
+                        background:'rgba(245,200,66,0.95)', color:'#0d0d0d',
+                        padding:'20px 32px', borderRadius:'14px', zIndex:'10000',
+                        fontFamily:"'Caveat', cursive", fontSize:'1.8rem',
+                        textAlign:'center', fontWeight:'700',
+                        boxShadow:'0 20px 50px rgba(0,0,0,0.4)'
                     });
-                    
-                    // Confettis doux
-                    confetti({
-                        particleCount: 50,
-                        spread: 80,
-                        origin: { y: 0.5 },
-                        colors: ['#ff4d6d', '#ffb3c1', '#ffd700'],
-                        shapes: ['heart'],
-                        scalar: 1
-                    });
-                    
-                    // Supprimer après 3 secondes
-                    setTimeout(() => {
-                        gsap.to(secretMsg, {
-                            scale: 0,
-                            opacity: 0,
-                            duration: 0.5,
-                            onComplete: () => {
-                                if (secretMsg.parentNode) {
-                                    secretMsg.parentNode.removeChild(secretMsg);
-                                }
-                            }
-                        });
-                    }, 3000);
-                    
+                    document.body.appendChild(msg);
+                    gsap.from(msg, {scale:0, opacity:0, duration:0.4, ease:"back.out(1.7)"});
+                    confetti({ particleCount: 60, spread: 90, origin: {y:0.5}, colors: ['#f5c842','#ff6b9d','#4ecdc4'] });
+                    setTimeout(() => { gsap.to(msg, {scale:0, opacity:0, duration:0.4, onComplete:()=>msg.remove()}); }, 3000);
                     clickCount = 0;
                 }
-                
                 clearTimeout(clickTimer);
-                clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                }, 500);
+                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
             }
         });
 
+        // Prevent double-tap zoom
+        let lastTouch = 0;
+        document.addEventListener('touchend', e => {
+            const now = Date.now();
+            if (now - lastTouch <= 300) e.preventDefault();
+            lastTouch = now;
+        }, false);
     </script>
 </body>
 </html>

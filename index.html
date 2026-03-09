@@ -1,635 +1,852 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux Anniversaire</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour toi • Joyeux Anniversaire</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@300;400;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-        :root {
-            --bg: #faf7f2;
-            --text: #1e1b1b;
-            --text-light: #6b6258;
-            --accent: #c89f7b;
-            --accent-light: #e5d5c2;
-            --white: #ffffff;
-            --shadow: rgba(0, 0, 0, 0.02);
-            --card-bg: #ffffff;
-            --border: #eae2d7;
-        }
+<style>
+:root {
+  --ink: #0c0a08;
+  --paper: #f5f0e8;
+  --rust: #c4622d;
+  --sage: #6b7c5c;
+  --blush: #e8b4a0;
+  --gold: #b8902a;
+  --charcoal: #2a2520;
+  --fog: rgba(245,240,232,0.06);
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Loader minimal */
-        .loader {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 0.6s ease;
-        }
-        .loader-content {
-            text-align: center;
-        }
-        .loader-number {
-            font-size: 3.5rem;
-            font-weight: 300;
-            font-family: 'Space Grotesk', sans-serif;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-        .loader-text {
-            font-size: 0.85rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--text-light);
-        }
-        .loader.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+html { scroll-behavior: auto; }
 
-        /* Container principal */
-        .app {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            position: relative;
-        }
+body {
+  background: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-        /* Header */
-        .header {
-            margin-bottom: 3rem;
-            text-align: left;
-            padding-top: 1rem;
-        }
-        .day-indicator {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-        .header h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 500;
-            line-height: 1.1;
-            color: var(--text);
-        }
-        .header h1 span {
-            color: var(--accent);
-            display: block;
-            font-size: 1.8rem;
-            margin-top: 0.3rem;
-        }
+/* ── CUSTOM CURSOR ── */
+.cursor {
+  width: 10px; height: 10px;
+  background: var(--blush);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 38px; height: 38px;
+  border: 1px solid rgba(232,180,160,0.5);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.15s ease-out;
+}
 
-        /* Profile row */
-        .profile-row {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .profile-image {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            filter: grayscale(20%);
-        }
-        .profile-text {
-            flex: 1;
-        }
-        .profile-name {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-        .profile-date {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
+/* ── INTRO SCREEN ── */
+#intro {
+  position: fixed; inset: 0;
+  background: var(--ink);
+  z-index: 5000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+}
 
-        /* Question principale */
-        .question-block {
-            margin-bottom: 4rem;
-        }
-        .question-block p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            margin-bottom: 2rem;
-        }
-        .buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        .btn {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: none;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-radius: 40px;
-        }
-        .btn-primary {
-            background: var(--text);
-            color: white;
-            border-color: var(--text);
-        }
-        .btn-primary:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .btn-outline:hover {
-            background: var(--border);
-        }
+.intro-date {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 6px;
+  color: rgba(232,180,160,0.5);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  opacity: 0;
+}
 
-        /* Messages */
-        .message-container {
-            margin-bottom: 2rem;
-            min-height: 60px;
-        }
-        .message-bubble {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 1rem 1.5rem;
-            display: inline-block;
-            max-width: 90%;
-            font-size: 0.95rem;
-            color: var(--text-light);
-        }
-        .message-bubble i {
-            color: var(--accent);
-            margin-right: 0.5rem;
-        }
+.intro-title {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(4rem, 12vw, 9rem);
+  color: var(--paper);
+  line-height: 1;
+  opacity: 0;
+  text-align: center;
+  padding: 0 20px;
+}
 
-        /* Section du message secret (cachée au début) */
-        .secret-section {
-            opacity: 0;
-            visibility: hidden;
-            height: 0;
-            overflow: hidden;
-            transition: opacity 0.5s ease;
-        }
-        .secret-section.revealed {
-            opacity: 1;
-            visibility: visible;
-            height: auto;
-            overflow: visible;
-        }
+.intro-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  color: var(--blush);
+  margin-top: 20px;
+  opacity: 0;
+  letter-spacing: 2px;
+}
 
-        /* Cartes de messages (scroll vertical) */
-        .cards-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin: 3rem 0;
-        }
-        .card-message {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 32px;
-            padding: 2rem 1.8rem;
-            box-shadow: 0 4px 20px var(--shadow);
-            transition: transform 0.2s ease;
-        }
-        .card-message:hover {
-            transform: translateY(-2px);
-        }
-        .card-number {
-            display: inline-block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--accent);
-            border: 1px solid var(--accent-light);
-            padding: 0.2rem 0.8rem;
-            border-radius: 30px;
-            margin-bottom: 1.2rem;
-        }
-        .card-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: var(--text);
-            margin-bottom: 1rem;
-            font-weight: 400;
-        }
-        .card-emphasis {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
-            color: var(--accent);
-            margin: 1.2rem 0;
-            font-weight: 500;
-        }
-        .card-signature {
-            font-size: 1rem;
-            color: var(--text-light);
-            text-align: right;
-            margin-top: 1rem;
-            font-style: italic;
-        }
+.intro-line {
+  width: 0; height: 1px;
+  background: var(--gold);
+  margin-top: 36px;
+  opacity: 0.6;
+}
 
-        /* Bouton retour */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            cursor: pointer;
-            border: none;
-            background: none;
-            padding: 0.5rem 0;
-        }
-        .back-link i {
-            font-size: 0.8rem;
-        }
-        .back-link:hover {
-            color: var(--accent);
-        }
+.intro-cta {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 5px;
+  color: rgba(245,240,232,0.3);
+  text-transform: uppercase;
+  margin-top: 36px;
+  opacity: 0;
+  animation: breathe 2.5s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
 
-        /* Footer */
-        .footer {
-            margin-top: 4rem;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-light);
-            font-size: 0.8rem;
-        }
+/* ── MAIN SCROLL CONTENT ── */
+#story {
+  opacity: 0;
+  visibility: hidden;
+}
 
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        .float {
-            animation: float 3s ease-in-out infinite;
-        }
+/* ── SECTIONS ── */
+.section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 80px 20px;
+  overflow: hidden;
+}
 
-        /* Encouragement flottant */
-        .floating-message {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text);
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 100;
-        }
-        .floating-message.show {
-            opacity: 1;
-        }
+/* ── CHAPTER COUNTER ── */
+.chapter-mark {
+  position: fixed;
+  right: 40px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.chapter-mark.visible { opacity: 1; }
+.ch-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.2);
+  transition: all 0.4s;
+  cursor: pointer;
+}
+.ch-dot.active {
+  background: var(--blush);
+  transform: scale(1.6);
+}
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .app { padding: 1.5rem 1rem; }
-            .header h1 { font-size: 2.2rem; }
-            .card-emphasis { font-size: 1.5rem; }
-        }
-    </style>
+/* ── SECTION 1 : OUVERTURE ── */
+#s1 {
+  background: var(--ink);
+  flex-direction: column;
+  text-align: center;
+}
+
+.s1-photo-wrap {
+  position: relative;
+  width: min(340px, 85vw);
+  margin: 0 auto 60px;
+}
+
+.s1-photo-bg {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse, rgba(196,98,45,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.s1-photo {
+  width: 100%; aspect-ratio: 1;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 2;
+  filter: grayscale(20%) contrast(1.05);
+  border: 1px solid rgba(184,144,42,0.3);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,240,232,0.05);
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.s1-year-tag {
+  position: absolute;
+  bottom: -10px; right: -10px;
+  background: var(--rust);
+  color: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 2px;
+  z-index: 3;
+  opacity: 0;
+}
+
+.s1-name {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  color: var(--paper);
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.s1-wish {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  color: var(--blush);
+  letter-spacing: 3px;
+  margin-top: 12px;
+  opacity: 0;
+}
+
+/* ── SECTION 2 : LE DEBUT ── */
+#s2 {
+  background: linear-gradient(170deg, #0f0d0b 0%, #1a1410 100%);
+}
+
+.prose-block {
+  max-width: 620px;
+  width: 100%;
+}
+
+.chapter-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 32px;
+  display: flex; align-items: center; gap: 16px;
+  opacity: 0;
+}
+.chapter-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rust);
+  opacity: 0.3;
+  max-width: 80px;
+}
+
+.prose-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--paper);
+  opacity: 0;
+  transform: translateY(20px);
+}
+.prose-big em {
+  font-style: italic;
+  color: var(--blush);
+}
+
+.prose-small {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(245,240,232,0.65);
+  margin-top: 28px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ── SECTION 3 : DATE ── */
+#s3 {
+  background: var(--charcoal);
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.date-giant {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(5rem, 20vw, 16rem);
+  font-weight: 300;
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245,240,232,0.12);
+  position: absolute;
+  white-space: nowrap;
+  user-select: none;
+  opacity: 0;
+}
+
+.date-center-block {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.date-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: -3px;
+  opacity: 0;
+}
+.date-num span { color: var(--rust); }
+
+.date-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--blush);
+  letter-spacing: 4px;
+  margin-top: 10px;
+  opacity: 0;
+}
+
+.date-since {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 5px;
+  color: rgba(245,240,232,0.3);
+  text-transform: uppercase;
+  margin-top: 30px;
+  opacity: 0;
+}
+
+/* ── SECTION 4 : METAPHORE ── */
+#s4 {
+  background: linear-gradient(160deg, #0e0c0a 0%, #16110e 100%);
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 80px clamp(24px, 8vw, 120px);
+}
+
+.pull-quote {
+  max-width: 700px;
+}
+
+.pq-line {
+  width: 50px; height: 3px;
+  background: var(--gold);
+  margin-bottom: 36px;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.pq-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--paper);
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.pq-text .highlight {
+  display: inline-block;
+  color: var(--gold);
+  position: relative;
+}
+.pq-text .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.4;
+}
+
+.pq-attribution {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: rgba(245,240,232,0.3);
+  margin-top: 40px;
+  letter-spacing: 3px;
+  opacity: 0;
+}
+
+/* ── SECTION 5 : INFINI ── */
+#s5 {
+  background: var(--ink);
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+}
+
+.infinity-bg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  opacity: 0.03;
+  font-size: 60vw;
+  line-height: 1;
+  color: var(--paper);
+  user-select: none;
+}
+
+.infinity-center {
+  position: relative; z-index: 2;
+  max-width: 560px;
+  padding: 0 24px;
+}
+
+.inf-number {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(3.5rem, 12vw, 8rem);
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: -4px;
+  opacity: 0;
+  line-height: 1;
+}
+.inf-number .x { color: var(--rust); }
+.inf-number .eq { color: rgba(245,240,232,0.2); font-weight: 300; font-size: 0.6em; }
+
+.inf-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  color: var(--blush);
+  margin-top: 20px;
+  letter-spacing: 2px;
+  opacity: 0;
+}
+
+.inf-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 300;
+  color: rgba(245,240,232,0.5);
+  line-height: 1.9;
+  margin-top: 30px;
+  opacity: 0;
+}
+
+/* ── SECTION 6 : FINALE ── */
+#s6 {
+  background: linear-gradient(180deg, var(--ink) 0%, #1a0e08 100%);
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.finale-bg-text {
+  position: absolute;
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(8rem, 30vw, 22rem);
+  color: rgba(196,98,45,0.04);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  white-space: nowrap;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.finale-photo {
+  width: min(160px, 40vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(184,144,42,0.4);
+  margin: 0 auto 50px;
+  display: block;
+  position: relative; z-index: 2;
+  opacity: 0;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.finale-love {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(4rem, 14vw, 10rem);
+  color: var(--paper);
+  line-height: 1;
+  position: relative; z-index: 2;
+  opacity: 0;
+}
+
+.finale-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.8vw, 1.4rem);
+  font-weight: 300;
+  color: rgba(245,240,232,0.7);
+  line-height: 1.9;
+  max-width: 480px;
+  margin: 24px auto 0;
+  position: relative; z-index: 2;
+  opacity: 0;
+}
+
+.finale-sig {
+  font-family: 'Pinyon Script', cursive;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--blush);
+  margin-top: 50px;
+  position: relative; z-index: 2;
+  opacity: 0;
+}
+
+.finale-confetti-btn {
+  display: inline-block;
+  margin-top: 50px;
+  padding: 14px 40px;
+  border: 1px solid rgba(245,240,232,0.15);
+  background: transparent;
+  color: rgba(245,240,232,0.4);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s;
+  position: relative; z-index: 2;
+  opacity: 0;
+}
+.finale-confetti-btn:hover {
+  border-color: var(--blush);
+  color: var(--blush);
+  background: rgba(232,180,160,0.05);
+}
+
+/* ── FLOATING PETALS ── */
+.petal {
+  position: fixed;
+  width: 6px; height: 6px;
+  border-radius: 50% 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: petalFall linear infinite;
+}
+@keyframes petalFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .chapter-mark { right: 16px; }
+  #s4 { padding: 80px 24px; }
+}
+@media (pointer: coarse) {
+  .cursor, .cursor-ring { display: none; }
+  body { cursor: auto; }
+}
+</style>
 </head>
 <body>
 
-    <!-- Loader -->
-    <div class="loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-number">03.09</div>
-            <div class="loader-text">Aujourd'hui est un jour spécial</div>
-        </div>
+<!-- Cursor -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curRing"></div>
+
+<!-- Chapter nav -->
+<div class="chapter-mark" id="chapMark">
+  <div class="ch-dot active" data-s="s1"></div>
+  <div class="ch-dot" data-s="s2"></div>
+  <div class="ch-dot" data-s="s3"></div>
+  <div class="ch-dot" data-s="s4"></div>
+  <div class="ch-dot" data-s="s5"></div>
+  <div class="ch-dot" data-s="s6"></div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro">
+  <div class="intro-date" id="iDate">09 · 03 · 2026</div>
+  <div class="intro-title" id="iTitle">Joyeux<br>Anniversaire</div>
+  <div class="intro-sub" id="iSub">pour toi, uniquement pour toi</div>
+  <div class="intro-line" id="iLine"></div>
+  <div class="intro-cta" id="iCta">↓ &nbsp; parcours ce message &nbsp; ↓</div>
+</div>
+
+<!-- ═══ STORY ═══ -->
+<main id="story">
+
+  <!-- S1 : Ouverture -->
+  <section class="section" id="s1">
+    <div style="text-align:center;">
+      <div class="s1-photo-wrap">
+        <div class="s1-photo-bg"></div>
+        <img src="me.png" alt="" class="s1-photo" id="s1Photo">
+        <div class="s1-year-tag" id="s1Tag">2025 — ∞</div>
+      </div>
+      <div class="s1-name" id="s1Name">Pour toi</div>
+      <div class="s1-wish" id="s1Wish">en ce jour qui est le tien</div>
     </div>
+  </section>
 
-    <!-- Message flottant (encouragement) -->
-    <div class="floating-message" id="floatingMessage"></div>
-
-    <!-- Application -->
-    <div class="app" id="app">
-
-        <!-- Header -->
-        <div class="header">
-            <div class="day-indicator">✨ 08 mars 2026</div>
-            <h1>
-                Joyeux anniversaire
-                <span>tout simplement</span>
-            </h1>
-        </div>
-
-        <!-- Profile -->
-        <div class="profile-row" id="profilePic">
-            <img src="me.png" alt="" class="profile-image" id="profileImg">
-            <div class="profile-text">
-                <div class="profile-name">À toi,</div>
-                <div class="profile-date">Un message en 5 parties</div>
-            </div>
-        </div>
-
-        <!-- Bloc principal (question) -->
-        <div id="mainBlock">
-            <div class="question-block">
-                <p>Un message préparé spécialement pour ce jour.</p>
-                <div class="buttons">
-                    <button class="btn btn-primary" id="revealBtn">Ouvrir</button>
-                    <button class="btn btn-outline" id="postponeBtn">Plus tard</button>
-                </div>
-            </div>
-
-            <!-- Messages contextuels -->
-            <div class="message-container" id="messageContainer"></div>
-        </div>
-
-        <!-- Section secrète (messages) -->
-        <div class="secret-section" id="secretSection">
-            <button class="back-link" id="backBtn">
-                <i class="fas fa-arrow-left"></i> Retour
-            </button>
-
-            <div class="cards-stack">
-                <!-- Carte 1 -->
-                <div class="card-message">
-                    <span class="card-number">01</span>
-                    <div class="card-text">
-                        Depuis le 08 Mars 2025 tu partages ma vie et ce temps passé avec toi est l'une des plus belles choses qui me soit arrivée.
-                    </div>
-                </div>
-
-                <!-- Carte 2 -->
-                <div class="card-message">
-                    <span class="card-number">02</span>
-                    <div class="card-text">
-                        Tout en souhaitant que ce soit à l'infini,
-                    </div>
-                    <div class="card-emphasis">
-                        plus que 3 × 1000
-                    </div>
-                    <div class="card-text">
-                        et bien au-delà de l'éternité.
-                    </div>
-                </div>
-
-                <!-- Carte 3 -->
-                <div class="card-message">
-                    <span class="card-number">03</span>
-                    <div class="card-text">
-                        Tu es apparue dans un moment où j'avais l'impression de me noyer et tu as été une bouteille d'oxygène qui m'assure de ne pas sombrer.
-                    </div>
-                </div>
-
-                <!-- Carte 4 -->
-                <div class="card-message">
-                    <span class="card-number">04</span>
-                    <div class="card-text">
-                        En ce 14 février et après ces presque une année, je suis heureux et fier d'être à tes côtés.
-                    </div>
-                </div>
-
-                <!-- Carte 5 -->
-                <div class="card-message">
-                    <span class="card-number">05</span>
-                    <div class="card-emphasis">Je t'aime</div>
-                    <div class="card-text">
-                        Plus que les mots ne peuvent le dire, plus que le temps ne peut le mesurer.
-                    </div>
-                    <div class="card-signature">Pour l'éternité</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer" id="footer">
-            <span>08 · 03 · 2026</span>
-        </div>
-
+  <!-- S2 : Le début -->
+  <section class="section" id="s2">
+    <div class="prose-block">
+      <div class="chapter-label" id="s2Label">I — Le commencement</div>
+      <h2 class="prose-big" id="s2Big">
+        Depuis le <em>08 Mars 2025</em>,<br>tu partages ma vie.
+      </h2>
+      <p class="prose-small" id="s2Small">
+        Et ce temps passé avec toi est l'une des plus belles choses qui me soit arrivée. Chaque journée portait en elle quelque chose que je n'avais pas prévu — ta présence, ta lumière, ta façon d'être là.
+      </p>
     </div>
+  </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Cache loader
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-                // Petite animation d'entrée
-                gsap.from('.header', { opacity: 0, y: 20, duration: 0.8, delay: 0.2 });
-                gsap.from('.profile-row', { opacity: 0, y: 20, duration: 0.8, delay: 0.3 });
-                gsap.from('.question-block', { opacity: 0, y: 20, duration: 0.8, delay: 0.4 });
-            }, 800);
+  <!-- S3 : La date -->
+  <section class="section" id="s3">
+    <div class="date-giant" id="dateGiant">08.03.2025</div>
+    <div class="date-center-block">
+      <div class="date-num" id="dateNum">08<span>.</span>03<span>.</span>25</div>
+      <div class="date-label" id="dateLabel">le jour où tout a commencé</div>
+      <div class="date-since" id="dateSince">une année de bonheur partagé</div>
+    </div>
+  </section>
 
-            const mainBlock = document.getElementById('mainBlock');
-            const secretSection = document.getElementById('secretSection');
-            const messageContainer = document.getElementById('messageContainer');
-            const floatingMessage = document.getElementById('floatingMessage');
-            const revealBtn = document.getElementById('revealBtn');
-            const postponeBtn = document.getElementById('postponeBtn');
-            const backBtn = document.getElementById('backBtn');
-            const profileImg = document.getElementById('profileImg');
-            const footer = document.getElementById('footer');
+  <!-- S4 : Métaphore -->
+  <section class="section" id="s4">
+    <div class="pull-quote">
+      <div class="pq-line" id="pqLine"></div>
+      <p class="pq-text" id="pqText">
+        Tu es apparue dans un moment où j'avais l'impression de me noyer — et tu as été cette <span class="highlight">bouteille d'oxygène</span> qui m'assure, encore aujourd'hui, de ne jamais sombrer.
+      </p>
+      <p class="pq-attribution" id="pqAttr">— ce que tu es pour moi</p>
+    </div>
+  </section>
 
-            let clickCount = 0;
-            const messages = [
-                "Pas maintenant ?", 
-                "Réfléchis...", 
-                "C'est un beau message", 
-                "👀", 
-                "Vraiment ?", 
-                "Tu vas l'aimer",
-                "Dernière fois ?",
-                "✨"
-            ];
+  <!-- S5 : Infini -->
+  <section class="section" id="s5">
+    <div class="infinity-bg">∞</div>
+    <div class="infinity-center">
+      <div class="inf-number" id="infNum">3 <span class="x">×</span> 1000</div>
+      <div class="inf-label" id="infLabel">et bien au-delà de l'éternité</div>
+      <p class="inf-desc" id="infDesc">
+        Tout en souhaitant que ce soit à l'infini — en ce jour d'anniversaire, après cette presque une année, je suis heureux et fier d'être à tes côtés.
+      </p>
+    </div>
+  </section>
 
-            // Bouton "Plus tard"
-            postponeBtn.addEventListener('click', () => {
-                clickCount++;
-                
-                // Message flottant
-                const msg = messages[Math.min(clickCount - 1, messages.length - 1)];
-                floatingMessage.textContent = msg;
-                floatingMessage.classList.add('show');
-                
-                // Animer le bouton "Ouvrir"
-                const scale = 1 + (clickCount * 0.1);
-                gsap.to(revealBtn, { scale: scale, duration: 0.3, ease: "backOut" });
-                
-                // Animer le bouton "Plus tard"
-                gsap.to(postponeBtn, { 
-                    x: (Math.random() - 0.5) * 40, 
-                    y: (Math.random() - 0.5) * 40,
-                    rotation: (Math.random() - 0.5) * 10,
-                    duration: 0.4,
-                    ease: "power2.out"
-                });
+  <!-- S6 : Finale -->
+  <section class="section" id="s6">
+    <div class="finale-bg-text">♡</div>
+    <img src="me.png" alt="" class="finale-photo" id="finPhoto">
+    <div class="finale-love" id="finLove">Je t'aime</div>
+    <p class="finale-body" id="finBody">
+      Plus que les mots ne peuvent le dire,<br>plus que le temps ne peut le mesurer.
+    </p>
+    <div class="finale-sig" id="finSig">pour l'éternité ✦</div>
+    <button class="finale-confetti-btn" id="finBtn" onclick="celebrate()">célébrons ensemble</button>
+  </section>
 
-                // Cacher le message après 2s
-                setTimeout(() => {
-                    floatingMessage.classList.remove('show');
-                }, 1500);
+</main>
 
-                // Petits confettis discrets après 3 clics
-                if (clickCount === 3) {
-                    confetti({
-                        particleCount: 20,
-                        spread: 40,
-                        origin: { y: 0.6 },
-                        colors: ['#c89f7b', '#e5d5c2'],
-                        shapes: ['circle'],
-                        scalar: 0.5
-                    });
-                }
-            });
+<script>
+gsap.registerPlugin(ScrollTrigger);
 
-            // Bouton "Ouvrir" - révèle les messages
-            revealBtn.addEventListener('click', () => {
-                // Animation de transition
-                gsap.to(mainBlock, {
-                    opacity: 0,
-                    y: -30,
-                    duration: 0.5,
-                    ease: "power2.in",
-                    onComplete: () => {
-                        mainBlock.style.display = 'none';
-                        secretSection.classList.add('revealed');
-                        
-                        // Animation des cartes
-                        gsap.from('.card-message', {
-                            opacity: 0,
-                            y: 30,
-                            duration: 0.6,
-                            stagger: 0.15,
-                            ease: "power2.out",
-                            onComplete: () => {
-                                // Confettis de célébration
-                                confetti({
-                                    particleCount: 50,
-                                    spread: 70,
-                                    origin: { y: 0.6 },
-                                    colors: ['#c89f7b', '#e5d5c2', '#1e1b1b'],
-                                    shapes: ['circle'],
-                                });
-                            }
-                        });
-                    }
-                });
-            });
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('curRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function loop() {
+  rx += (mx - rx) * 0.14;
+  ry += (my - ry) * 0.14;
+  cur.style.transform = `translate(${mx-5}px, ${my-5}px)`;
+  curRing.style.transform = `translate(${rx-19}px, ${ry-19}px)`;
+  requestAnimationFrame(loop);
+})();
 
-            // Bouton retour
-            backBtn.addEventListener('click', () => {
-                gsap.to(secretSection, {
-                    opacity: 0,
-                    y: -20,
-                    duration: 0.4,
-                    ease: "power2.in",
-                    onComplete: () => {
-                        secretSection.classList.remove('revealed');
-                        secretSection.style.opacity = '';
-                        secretSection.style.y = '';
-                        mainBlock.style.display = 'block';
-                        
-                        gsap.from(mainBlock, {
-                            opacity: 0,
-                            y: 30,
-                            duration: 0.6,
-                            ease: "power2.out"
-                        });
-                    }
-                });
-            });
+// ── PETALS ──
+(function createPetals() {
+  const colors = ['#c4622d','#e8b4a0','#b8902a','#6b7c5c'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.width = p.style.height = (Math.random() * 6 + 3) + 'px';
+    const dur = Math.random() * 18 + 14;
+    p.style.animationDuration = dur + 's';
+    p.style.animationDelay = Math.random() * 10 + 's';
+    document.body.appendChild(p);
+  }
+})();
 
-            // Easter egg: clic sur la photo
-            profileImg.addEventListener('click', () => {
-                gsap.to(profileImg, {
-                    scale: 1.1,
-                    duration: 0.2,
-                    yoyo: true,
-                    repeat: 1
-                });
-                
-                confetti({
-                    particleCount: 25,
-                    spread: 50,
-                    origin: { x: 0.5, y: 0.5 },
-                    colors: ['#c89f7b', '#1e1b1b'],
-                    shapes: ['circle']
-                });
-            });
+// ── INTRO ANIMATION ──
+const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+tl
+  .to('#iDate',  { opacity: 1, duration: 0.8 }, 0.4)
+  .to('#iTitle', { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out' }, 0.8)
+  .fromTo('#iTitle', { y: 40 }, { y: 0, duration: 1.2, ease: 'expo.out' }, 0.8)
+  .to('#iSub',   { opacity: 1, duration: 0.8 }, 1.6)
+  .to('#iLine',  { width: 120, opacity: 0.6, duration: 0.8 }, 2.0)
+  .to('#iCta',   { opacity: 0.3, duration: 0.6 }, 2.4);
 
-            // Triple clic sur le footer (easter egg)
-            let footerClick = 0;
-            footer.addEventListener('click', () => {
-                footerClick++;
-                if (footerClick === 3) {
-                    const secretDiv = document.createElement('div');
-                    secretDiv.textContent = '3 × 1000 = infini ✨';
-                    secretDiv.style.position = 'fixed';
-                    secretDiv.style.top = '50%';
-                    secretDiv.style.left = '50%';
-                    secretDiv.style.transform = 'translate(-50%, -50%)';
-                    secretDiv.style.background = '#1e1b1b';
-                    secretDiv.style.color = 'white';
-                    secretDiv.style.padding = '1rem 2rem';
-                    secretDiv.style.borderRadius = '40px';
-                    secretDiv.style.zIndex = '1000';
-                    secretDiv.style.fontSize = '1.2rem';
-                    document.body.appendChild(secretDiv);
-                    
-                    confetti({
-                        particleCount: 100,
-                        spread: 100,
-                        origin: { y: 0.5 },
-                        colors: ['#c89f7b', '#1e1b1b', '#e5d5c2']
-                    });
-                    
-                    setTimeout(() => {
-                        secretDiv.remove();
-                    }, 2000);
-                    
-                    footerClick = 0;
-                }
-            });
+// ── SCROLL TO DISMISS INTRO ──
+let introDone = false;
+function dismissIntro() {
+  if (introDone) return;
+  introDone = true;
+  gsap.to('#intro', {
+    opacity: 0, duration: 1.2, ease: 'power2.inOut',
+    onComplete: () => {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('story').style.opacity = 1;
+      document.getElementById('story').style.visibility = 'visible';
+      document.getElementById('chapMark').classList.add('visible');
+      initScrollAnimations();
+    }
+  });
+}
 
-            // Gestion du double tap pour éviter le zoom
-            let lastTouch = 0;
-            document.addEventListener('touchend', (e) => {
-                const now = Date.now();
-                if (now - lastTouch <= 300) {
-                    e.preventDefault();
-                }
-                lastTouch = now;
-            }, false);
-        });
-    </script>
+// Dismiss on scroll or click after 1s
+setTimeout(() => {
+  window.addEventListener('scroll', dismissIntro, { once: true });
+  document.addEventListener('click', dismissIntro, { once: true });
+  document.addEventListener('touchstart', dismissIntro, { once: true });
+}, 1000);
+
+// Auto dismiss after 4s
+setTimeout(dismissIntro, 4500);
+
+// ── SCROLL ANIMATIONS ──
+function initScrollAnimations() {
+
+  // S1
+  gsap.to('#s1Photo', { opacity: 1, scale: 1, duration: 1.4, ease: 'expo.out',
+    scrollTrigger: { trigger: '#s1', start: 'top 80%' } });
+  gsap.to('#s1Tag', { opacity: 1, duration: 0.8, delay: 0.5,
+    scrollTrigger: { trigger: '#s1', start: 'top 80%' } });
+  gsap.to('#s1Name', { opacity: 1, y: 0, duration: 1.2, delay: 0.3, ease: 'expo.out',
+    scrollTrigger: { trigger: '#s1', start: 'top 80%' } });
+  gsap.fromTo('#s1Name', { y: 30 }, { y: 0, duration: 1.2, delay: 0.3, ease: 'expo.out',
+    scrollTrigger: { trigger: '#s1', start: 'top 80%' } });
+  gsap.to('#s1Wish', { opacity: 1, duration: 0.8, delay: 0.6,
+    scrollTrigger: { trigger: '#s1', start: 'top 80%' } });
+
+  // S2
+  gsap.to('#s2Label', { opacity: 1, duration: 0.6,
+    scrollTrigger: { trigger: '#s2', start: 'top 75%' } });
+  gsap.to('#s2Big', { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out',
+    scrollTrigger: { trigger: '#s2', start: 'top 75%' } });
+  gsap.to('#s2Small', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: 'power3.out',
+    scrollTrigger: { trigger: '#s2', start: 'top 75%' } });
+
+  // S3
+  gsap.to('#dateGiant', { opacity: 1, duration: 2, ease: 'power1.out',
+    scrollTrigger: { trigger: '#s3', start: 'top 80%' } });
+  gsap.to('#dateNum', { opacity: 1, duration: 0.8, delay: 0.2,
+    scrollTrigger: { trigger: '#s3', start: 'top 80%' } });
+  gsap.to('#dateLabel', { opacity: 1, duration: 0.8, delay: 0.5,
+    scrollTrigger: { trigger: '#s3', start: 'top 80%' } });
+  gsap.to('#dateSince', { opacity: 1, duration: 0.8, delay: 0.8,
+    scrollTrigger: { trigger: '#s3', start: 'top 80%' } });
+
+  // S4
+  gsap.to('#pqLine', { scaleX: 1, opacity: 1, duration: 0.8,
+    scrollTrigger: { trigger: '#s4', start: 'top 70%' } });
+  gsap.to('#pqText', { opacity: 1, x: 0, duration: 1.2, delay: 0.3, ease: 'expo.out',
+    scrollTrigger: { trigger: '#s4', start: 'top 70%' } });
+  gsap.to('#pqAttr', { opacity: 1, duration: 0.8, delay: 0.8,
+    scrollTrigger: { trigger: '#s4', start: 'top 70%' } });
+
+  // S5
+  gsap.to('#infNum', { opacity: 1, duration: 0.9, ease: 'back.out(1.5)',
+    scrollTrigger: { trigger: '#s5', start: 'top 75%' } });
+  gsap.to('#infLabel', { opacity: 1, duration: 0.8, delay: 0.3,
+    scrollTrigger: { trigger: '#s5', start: 'top 75%' } });
+  gsap.to('#infDesc', { opacity: 1, duration: 0.8, delay: 0.6,
+    scrollTrigger: { trigger: '#s5', start: 'top 75%' } });
+
+  // S6
+  gsap.to('#finPhoto', { opacity: 1, duration: 1.2, ease: 'power2.out',
+    scrollTrigger: { trigger: '#s6', start: 'top 80%' } });
+  gsap.to('#finLove', { opacity: 1, duration: 1.2, delay: 0.3, ease: 'expo.out',
+    scrollTrigger: { trigger: '#s6', start: 'top 80%' },
+    onComplete: () => { setTimeout(celebrate, 800); }
+  });
+  gsap.to('#finBody', { opacity: 1, duration: 0.8, delay: 0.8,
+    scrollTrigger: { trigger: '#s6', start: 'top 80%' } });
+  gsap.to('#finSig', { opacity: 1, duration: 0.8, delay: 1.2,
+    scrollTrigger: { trigger: '#s6', start: 'top 80%' } });
+  gsap.to('#finBtn', { opacity: 1, duration: 0.8, delay: 1.6,
+    scrollTrigger: { trigger: '#s6', start: 'top 80%' } });
+
+  // Chapter dots active state
+  const sections = ['s1','s2','s3','s4','s5','s6'];
+  sections.forEach((id, i) => {
+    ScrollTrigger.create({
+      trigger: '#' + id,
+      start: 'top 50%',
+      end: 'bottom 50%',
+      onEnter: () => setActiveDot(i),
+      onEnterBack: () => setActiveDot(i),
+    });
+  });
+}
+
+function setActiveDot(i) {
+  document.querySelectorAll('.ch-dot').forEach((d, j) => {
+    d.classList.toggle('active', i === j);
+  });
+}
+
+document.querySelectorAll('.ch-dot').forEach(d => {
+  d.addEventListener('click', () => {
+    document.getElementById(d.dataset.s).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ── CELEBRATE ──
+let celebrated = false;
+function celebrate() {
+  if (celebrated) return;
+  celebrated = true;
+  const end = Date.now() + 2200;
+  const colors = ['#c4622d','#e8b4a0','#b8902a','#f5f0e8','#6b7c5c'];
+  (function frame() {
+    confetti({ particleCount: 4, angle: 60, spread: 55, origin: {x:0}, colors, ticks: 200 });
+    confetti({ particleCount: 4, angle: 120, spread: 55, origin: {x:1}, colors, ticks: 200 });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
+  setTimeout(() => { celebrated = false; }, 4000);
+}
+
+document.getElementById('finBtn').addEventListener('click', () => {
+  celebrated = false;
+  celebrate();
+});
+</script>
 </body>
 </html>
